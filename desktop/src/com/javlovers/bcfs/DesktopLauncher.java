@@ -11,7 +11,7 @@ public class DesktopLauncher {
 		config.setForegroundFPS(60);
 		config.setWindowedMode(1280,720);
 		config.useVsync(true);
-//		config.setResizable(false);
+		config.setResizable(false);
 		config.setTitle("Big Cock Fighting Simulator");
 		new Lwjgl3Application(new BCFS(), config);
 	}

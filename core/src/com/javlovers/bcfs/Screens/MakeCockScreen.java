@@ -11,7 +11,6 @@ import com.javlovers.bcfs.BCFS;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import java.util.ArrayList;
 
 import static com.badlogic.gdx.math.MathUtils.random;
 
@@ -20,7 +19,7 @@ public class MakeCockScreen implements Screen {
     OrthographicCamera camera;
     Stage stage;
     Skin skin;
-    ArrayList<TextButton> cockAttacks;
+    ButtonGroup<TextButton> cockAttacks;
     Table table;
     Table sidebarTable;
     Table subTable;
@@ -32,9 +31,6 @@ public class MakeCockScreen implements Screen {
     TextButton backButton;
     TextButton saveButton;
     TextButton testButton;
-    TextButton prevAttacksButton;
-    TextButton selectAttackButton;
-    TextButton nextAttacksButton;
 
     public MakeCockScreen(final BCFS gam) {
         game = gam;
@@ -54,24 +50,26 @@ public class MakeCockScreen implements Screen {
         subTable = new Table();
         attackListTable = new Table();
         attackTraversalButtonBar = new Table();
+
         cockNameTextField = new TextField("", skin);
         attacksText = new Label("ATTACKS", skin);
+
         nameText = new Label("NAME: ", skin);
+
         backButton = new TextButton("BACK", skin);
         saveButton = new TextButton("SAVE", skin);
         testButton = new TextButton("TEST", skin);
-        prevAttacksButton = new TextButton("<", skin);
-        selectAttackButton = new TextButton("SELECT", skin);
-        nextAttacksButton = new TextButton(">", skin);
-        cockAttacks = new ArrayList<>();
+
+        cockAttacks = new ButtonGroup<>();
+        cockAttacks.setMaxCheckCount(1);
+        cockAttacks.setMinCheckCount(0);
+        cockAttacks.add(new TextButton("ATTACK 1", skin, "toggle"));
+        cockAttacks.add(new TextButton("ATTACK 2", skin, "toggle"));
+        cockAttacks.add(new TextButton("ATTACK 3", skin, "toggle"));
+        cockAttacks.add(new TextButton("ATTACK 4", skin, "toggle"));
 
         table.setFillParent(true);
         table.pad(25).left();
-
-        cockAttacks.add(new TextButton("ATTACK 1", skin));
-        cockAttacks.add(new TextButton("ATTACK 2", skin));
-        cockAttacks.add(new TextButton("ATTACK 3", skin));
-        cockAttacks.add(new TextButton("ATTACK 4", skin));
     }
 
     @Override
@@ -110,7 +108,7 @@ public class MakeCockScreen implements Screen {
         sidebarTable.add(attacksText).left().padTop(50).padBottom(25).colspan(2);
         sidebarTable.row();
 
-        for (TextButton button : cockAttacks) {
+        for (TextButton button : cockAttacks.getButtons()) {
             sidebarTable.add(button).width(350).height(60).padBottom(buttonSpacing).left();
             sidebarTable.row();
 
@@ -118,8 +116,12 @@ public class MakeCockScreen implements Screen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     // Handle Button Click
-                    System.out.println(button.getText());
-                    createAttackList();
+                    boolean isChecked = button.isChecked();
+                    if (isChecked) {
+                        createAttackList();
+                    } else {
+                        hideAttackList();
+                    }
                 }
             });
         }
@@ -128,7 +130,7 @@ public class MakeCockScreen implements Screen {
         subTable.add(testButton).width(170).height(60);
         sidebarTable.add(subTable).padTop(50).colspan(2).left();
 
-        // CLICK HANDLING
+        // Button Click Handling
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -156,12 +158,18 @@ public class MakeCockScreen implements Screen {
         });
 
         stage.addActor(table);
-//        table.setDebug(true);
     }
 
     private void createAttackList() {
-        // Clear existing attack list
-        attackListTable.clear();
+        hideAttackList();
+        ButtonGroup<TextButton> attacksButtonGroup = new ButtonGroup<>();
+
+        TextButton prevAttacksButton = new TextButton("<", skin);
+        TextButton selectAttackButton = new TextButton("SELECT", skin);
+        TextButton nextAttacksButton = new TextButton(">", skin);
+
+        attacksButtonGroup.setMaxCheckCount(1);
+        attacksButtonGroup.setUncheckLast(true);
 
         // fields for attackCard, insert values from attacksDB
         // Add field for attacktype, which defines the button skin to be used in the constructor
@@ -170,7 +178,7 @@ public class MakeCockScreen implements Screen {
         int param2 = random.nextInt(9999 - 1 + 1) + 1;
         int param3 = random.nextInt(9999 - 1 + 1) + 1;
 
-        // ATTACK CARD CONSTRUCTOR
+        // Attack Card Constructor
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 final int row = i;
@@ -178,8 +186,10 @@ public class MakeCockScreen implements Screen {
                 TextButton attackCard = new TextButton(attackName + "\n\n\n" +
                         "PARAM:   " + param1 + "\n\n" +
                         "PARAM:   " + param2 + "\n\n" +
-                        "PARAM:   " + param3 + "\n\n", skin);
+                        "PARAM:   " + param3 + "\n", skin, "toggle");
                 attackListTable.add(attackCard).width(175).height(180).pad(5);
+                attacksButtonGroup.add(attackCard);
+
                 attackCard.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
@@ -220,8 +230,14 @@ public class MakeCockScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 // set selected Attack to target cockAttacks slot
                 System.out.println("SELECT");
+                System.out.println("SELECTED ATTACK:\n" + attacksButtonGroup.getChecked());
             }
         });
+    }
+
+    private void hideAttackList() {
+        attackListTable.clear();
+        attackTraversalButtonBar.clear();
     }
 
     @Override
