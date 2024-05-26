@@ -169,7 +169,7 @@ public class MakeCockScreen implements Screen {
         TextButton nextAttacksButton = new TextButton(">", skin);
 
         attacksButtonGroup.setMaxCheckCount(1);
-        attacksButtonGroup.setUncheckLast(true);
+        attacksButtonGroup.setMinCheckCount(0);
 
         // fields for attackCard, insert values from attacksDB
         // Add field for attacktype, which defines the button skin to be used in the constructor

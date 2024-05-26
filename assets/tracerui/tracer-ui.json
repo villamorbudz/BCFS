@@ -417,6 +417,11 @@
 			"up": "button-c",
 			"down": "button-pressed-c",
 			"checked": "button-over-c"
+		},
+		"display": {
+			"font": "font",
+			"fontColor": "color",
+			"up": "button-c"
 		}
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {

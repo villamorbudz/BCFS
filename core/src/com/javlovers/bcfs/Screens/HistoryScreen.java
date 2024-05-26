@@ -5,19 +5,31 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.javlovers.bcfs.BCFS;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import java.util.ArrayList;
+
+import static com.badlogic.gdx.utils.Align.center;
+import static com.badlogic.gdx.utils.Align.top;
 
 public class HistoryScreen implements Screen {
     final BCFS game;
     OrthographicCamera camera;
     Stage stage;
     Skin skin;
+    Table table;
+    Table sidebarTable;
+    Table gameHistoryTable;
+    Table gameInfoTable;
+    TextButton gameInfo;
+    ScrollPane historyScrollPane;
+    Label historyLabel;
+    TextButton backButton;
+    ButtonGroup<TextButton> gamesButtonGroup;
 
     public HistoryScreen(final BCFS gam) {
         game = gam;
@@ -49,46 +61,55 @@ public class HistoryScreen implements Screen {
 
     @Override
     public void show() {
-        Table table = new Table();
+        table = new Table();
+        sidebarTable = new Table();
+        gameHistoryTable = new Table();
+        gameInfoTable = new Table();
+
         table.setFillParent(true);
         table.pad(50).padTop(25).top().left();
 
-        ScrollPane historyScrollPane;
-        Table sidebarTable;
-        Table gameHistoryTable;
-
-        // Creating
-        Label historyLabel = new Label("HISTORY", skin);
-        TextButton backButton = new TextButton("BACK", skin);
-        TextArea gameInfo = new TextArea("GAME INFO", skin);
-
-        // Adding
-        sidebarTable = new Table();
-        sidebarTable.top().left();
-        table.add(sidebarTable);
-
-        gameHistoryTable = new Table();
+        historyLabel = new Label("HISTORY", skin);
+        backButton = new TextButton("BACK", skin);
         historyScrollPane = new ScrollPane(gameHistoryTable, skin);
+
+        gamesButtonGroup = new ButtonGroup<>();
+        gamesButtonGroup.setMinCheckCount(0);
+        gamesButtonGroup.setMaxCheckCount(1);
+
+        sidebarTable.top().left();
 
         float buttonSpacing = 25f;
 
+        table.add(sidebarTable).expandY().top().left();
         sidebarTable.add(backButton).width(200).height(45).padLeft(15).padBottom(50f).left();
         sidebarTable.row();
 
-        sidebarTable.add(historyLabel).padTop(25).padBottom(25).center();
+        sidebarTable.add(historyLabel).padBottom(25).center();
         sidebarTable.row();
 
         for (int i = 1; i <= 50; i++) {
-            TextButton gameButton = new TextButton("PLAYER" + i + " VS PLAYER" + (i + 1), skin);
+            TextButton gameButton = new TextButton("", skin, "toggle");
+            Label gameButtonLabel = new Label("PLAYER" + i + " VS PLAYER" + (i + 1), skin);
+            gameButton.setLabel(gameButtonLabel);
+            gameButtonLabel.setAlignment(center);
+
+            gamesButtonGroup.add(gameButton);
             gameHistoryTable.add(gameButton).width(350).height(60).padBottom(buttonSpacing).center();
             gameHistoryTable.row();
+
+            gameButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if (gameButton.isChecked()) {
+                        displayGameInfo();
+                    } else {
+                        clearGameInfo();
+                    }
+                }
+            });
         }
-        sidebarTable.add(historyScrollPane).width(400).growY().padBottom(buttonSpacing).top().left();
 
-        table.add(gameInfo).pad(25).grow();
-        stage.addActor(table);
-
-        // CLICK HANDLING
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -98,6 +119,32 @@ public class HistoryScreen implements Screen {
                 dispose();
             }
         });
+
+        gameInfo = new TextButton("GAME INFO", skin, "display");
+        gameInfoTable.add(gameInfo).grow().center();
+        clearGameInfo();
+
+        table.add(gameInfoTable).grow().padLeft(15);
+        sidebarTable.add(historyScrollPane).width(400).growY().padBottom(buttonSpacing).top().left();
+        stage.addActor(table);
+    }
+
+    private void displayGameInfo() {
+        // add functionality where it inputs appropriate game info
+        Label gameInfoText = new Label("GAME INFO\n\n" +
+                "STAT\n" +
+                "STAT\n" +
+                "STATs\n", skin);
+        gameInfo.setLabel(gameInfoText);
+        gameInfoText.setAlignment(center);
+
+        gameInfo.setDisabled(true);
+        gameInfo.setVisible(true);
+    }
+
+    private void clearGameInfo() {
+        gameInfo.setText("");
+        gameInfo.setVisible(false);
     }
 
     @Override
@@ -106,23 +153,17 @@ public class HistoryScreen implements Screen {
     }
 
     @Override
-    public void pause() {
-
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() {}
 
     @Override
-    public void hide() {
-
-    }
+    public void hide() {}
 
     @Override
     public void dispose() {
         stage.dispose();
-        skin.dispose(); // Dispose of the skin
+        skin.dispose();
     }
 }
