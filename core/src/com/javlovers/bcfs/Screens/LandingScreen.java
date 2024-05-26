@@ -120,6 +120,16 @@ public class LandingScreen implements Screen {
             }
         });
 
+        settingsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Handle Button Click
+                System.out.println("SETTINGS");
+                game.setScreen(new SettingsScreen(game));
+                dispose();
+            }
+        });
+
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

@@ -13,12 +13,28 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import java.util.ArrayList;
 
+import static com.badlogic.gdx.math.MathUtils.random;
+
 public class MakeCockScreen implements Screen {
     final BCFS game;
     OrthographicCamera camera;
     Stage stage;
-    ArrayList<TextButton> attackButtons;
     Skin skin;
+    ArrayList<TextButton> cockAttacks;
+    Table table;
+    Table sidebarTable;
+    Table subTable;
+    Table attackListTable;
+    Table attackTraversalButtonBar;
+    TextField cockNameTextField;
+    Label attacksText;
+    Label nameText;
+    TextButton backButton;
+    TextButton saveButton;
+    TextButton testButton;
+    TextButton prevAttacksButton;
+    TextButton selectAttackButton;
+    TextButton nextAttacksButton;
 
     public MakeCockScreen(final BCFS gam) {
         game = gam;
@@ -31,6 +47,31 @@ public class MakeCockScreen implements Screen {
 
         // Load the skin
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
+
+        // Initialize
+        table = new Table();
+        sidebarTable = new Table();
+        subTable = new Table();
+        attackListTable = new Table();
+        attackTraversalButtonBar = new Table();
+        cockNameTextField = new TextField("", skin);
+        attacksText = new Label("ATTACKS", skin);
+        nameText = new Label("NAME: ", skin);
+        backButton = new TextButton("BACK", skin);
+        saveButton = new TextButton("SAVE", skin);
+        testButton = new TextButton("TEST", skin);
+        prevAttacksButton = new TextButton("<", skin);
+        selectAttackButton = new TextButton("SELECT", skin);
+        nextAttacksButton = new TextButton(">", skin);
+        cockAttacks = new ArrayList<>();
+
+        table.setFillParent(true);
+        table.pad(25).left();
+
+        cockAttacks.add(new TextButton("ATTACK 1", skin));
+        cockAttacks.add(new TextButton("ATTACK 2", skin));
+        cockAttacks.add(new TextButton("ATTACK 3", skin));
+        cockAttacks.add(new TextButton("ATTACK 4", skin));
     }
 
     @Override
@@ -50,62 +91,42 @@ public class MakeCockScreen implements Screen {
 
     @Override
     public void show() {
-        Table table = new Table();
-        table.setFillParent(true);
-        table.pad(50).padTop(25).left();
-
-        attackButtons = new ArrayList<>();
-        Label attacksText = new Label("ATTACKS", skin);
-        Label nameText = new Label("NAME: ", skin);
-        TextField cockNameTextField = new TextField("", skin);
-
-        // Creating
-        TextButton backButton = new TextButton("BACK", skin);
-        TextButton attack1Button = new TextButton("ATTACK 1", skin);
-        TextButton attack2Button = new TextButton("ATTACK 2", skin);
-        TextButton attack3Button = new TextButton("ATTACK 3", skin);
-        TextButton attack4Button = new TextButton("ATTACK 4", skin);
-        TextButton saveButton = new TextButton("SAVE", skin);
-        TextButton testButton = new TextButton("TEST", skin);
-
-        attackButtons.add(attack1Button);
-        attackButtons.add(attack2Button);
-        attackButtons.add(attack3Button);
-        attackButtons.add(attack4Button);
-
-        // Adding
-        Table sidebarTable = new Table();
-        sidebarTable.top().left();
-
-        table.add(sidebarTable);
+        // Main Table Elements
+        table.add(sidebarTable).top().left();
+        table.add(attackListTable).padTop(25).padLeft(20).top().left();
 
         float buttonSpacing = 25f;
-
-        sidebarTable.add(backButton).width(200).height(45).padBottom(buttonSpacing).left();
+        sidebarTable.add(backButton).width(175).height(45).padBottom(buttonSpacing).left();
         sidebarTable.row();
 
+        // Cock Name TextField
         Table cockNameSubtable = new Table();
         cockNameSubtable.add(nameText).padRight(25).left();
-        cockNameSubtable.add(cockNameTextField).width(300).left();
-        sidebarTable.add(cockNameSubtable).padTop(10).left();
+        cockNameSubtable.add(cockNameTextField).width(250).left();
+        sidebarTable.add(cockNameSubtable).center();
         sidebarTable.row();
 
+        // Sidebar
         sidebarTable.add(attacksText).left().padTop(50).padBottom(25).colspan(2);
         sidebarTable.row();
 
-        for (TextButton button : attackButtons) {
-            sidebarTable.add(button).width(400).height(60).padBottom(buttonSpacing).left();
-            sidebarTable.row(); // Move to the next row after each button
+        for (TextButton button : cockAttacks) {
+            sidebarTable.add(button).width(350).height(60).padBottom(buttonSpacing).left();
+            sidebarTable.row();
+
+            button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    // Handle Button Click
+                    System.out.println(button.getText());
+                    createAttackList();
+                }
+            });
         }
 
-        // Subtable
-        Table subTable = new Table();
-        subTable.add(saveButton).width(190).height(60).padRight(20).left();
-        subTable.add(testButton).width(190).height(60);
-
+        subTable.add(saveButton).width(170).height(60).padRight(15).left();
+        subTable.add(testButton).width(170).height(60);
         sidebarTable.add(subTable).padTop(50).colspan(2).left();
-
-        stage.addActor(table);
 
         // CLICK HANDLING
         backButton.addListener(new ClickListener() {
@@ -115,38 +136,6 @@ public class MakeCockScreen implements Screen {
                 System.out.println("BACK");
                 game.setScreen(new LandingScreen(game));
                 dispose();
-            }
-        });
-
-        attack1Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Handle Attack 1 Click
-                System.out.println("ATTACK 1");
-            }
-        });
-
-        attack2Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Handle Attack 2 Click
-                System.out.println("ATTACK 2");
-            }
-        });
-
-        attack3Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Handle Attack 3 Click
-                System.out.println("ATTACK 3");
-            }
-        });
-
-        attack4Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Handle Attack 1 Click
-                System.out.println("ATTACK 4");
             }
         });
 
@@ -165,6 +154,74 @@ public class MakeCockScreen implements Screen {
                 System.out.println("TEST");
             }
         });
+
+        stage.addActor(table);
+//        table.setDebug(true);
+    }
+
+    private void createAttackList() {
+        // Clear existing attack list
+        attackListTable.clear();
+
+        // fields for attackCard, insert values from attacksDB
+        // Add field for attacktype, which defines the button skin to be used in the constructor
+        String attackName = "ATTACKNAME";
+        int param1 = random.nextInt(9999 - 1 + 1) + 1;
+        int param2 = random.nextInt(9999 - 1 + 1) + 1;
+        int param3 = random.nextInt(9999 - 1 + 1) + 1;
+
+        // ATTACK CARD CONSTRUCTOR
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                final int row = i;
+                final int col = j;
+                TextButton attackCard = new TextButton(attackName + "\n\n\n" +
+                        "PARAM:   " + param1 + "\n\n" +
+                        "PARAM:   " + param2 + "\n\n" +
+                        "PARAM:   " + param3 + "\n\n", skin);
+                attackListTable.add(attackCard).width(175).height(180).pad(5);
+                attackCard.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        // Handle Attack Card Click
+                        System.out.println("ATTACK CARD [" + row + "][" + col + "]");
+                    }
+                });
+            }
+            attackListTable.row();
+        }
+
+        attackTraversalButtonBar.add(prevAttacksButton).width(125).padRight(25);
+        attackTraversalButtonBar.add(selectAttackButton).width(225).padRight(25);
+        attackTraversalButtonBar.add(nextAttacksButton).width(125);
+        attackListTable.add(attackTraversalButtonBar).colspan(3).pad(20);
+
+        prevAttacksButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // add page traversal from attacks in DB
+                // add attacks list traversal tracker and check index bounds
+                System.out.println("PREV");
+                createAttackList();
+            }
+        });
+        nextAttacksButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // add page traversal from attacks in DB
+                // add attacks list traversal tracker and check index bounds
+                System.out.println("NEXT");
+                createAttackList();
+            }
+        });
+
+        selectAttackButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // set selected Attack to target cockAttacks slot
+                System.out.println("SELECT");
+            }
+        });
     }
 
     @Override
@@ -173,19 +230,13 @@ public class MakeCockScreen implements Screen {
     }
 
     @Override
-    public void pause() {
-
-    }
+    public void pause() { }
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() { }
 
     @Override
-    public void hide() {
-
-    }
+    public void hide() { }
 
     @Override
     public void dispose() {

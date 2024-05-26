@@ -72,10 +72,10 @@ public class HistoryScreen implements Screen {
 
         float buttonSpacing = 25f;
 
-        sidebarTable.add(backButton).width(200).height(45).padBottom(buttonSpacing).left();
+        sidebarTable.add(backButton).width(200).height(45).padLeft(15).padBottom(50f).left();
         sidebarTable.row();
 
-        sidebarTable.add(historyLabel).padBottom(50).center();
+        sidebarTable.add(historyLabel).padTop(25).padBottom(25).center();
         sidebarTable.row();
 
         for (int i = 1; i <= 50; i++) {
@@ -83,7 +83,7 @@ public class HistoryScreen implements Screen {
             gameHistoryTable.add(gameButton).width(350).height(60).padBottom(buttonSpacing).center();
             gameHistoryTable.row();
         }
-        sidebarTable.add(historyScrollPane).width(400).growY().top().left();
+        sidebarTable.add(historyScrollPane).width(400).growY().padBottom(buttonSpacing).top().left();
 
         table.add(gameInfo).pad(25).grow();
         stage.addActor(table);
