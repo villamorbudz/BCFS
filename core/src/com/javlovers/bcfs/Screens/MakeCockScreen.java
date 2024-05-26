@@ -52,9 +52,9 @@ public class MakeCockScreen implements Screen {
         attackTraversalButtonBar = new Table();
 
         cockNameTextField = new TextField("", skin);
-        attacksText = new Label("ATTACKS", skin);
+        attacksText = new Label("ATTACKS", skin, "title");
 
-        nameText = new Label("NAME: ", skin);
+        nameText = new Label("NAME: ", skin,"title");
 
         backButton = new TextButton("BACK", skin);
         saveButton = new TextButton("SAVE", skin);

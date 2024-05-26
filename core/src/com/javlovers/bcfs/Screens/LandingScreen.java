@@ -57,7 +57,7 @@ public class LandingScreen implements Screen {
     public void show() {
         buttons = new ArrayList<>();
 
-        Label gameTitle = new Label("BIG COCK FIGHTING SIMULATOR", skin);
+        Label gameTitle = new Label("BIG COCK FIGHTING SIMULATOR", skin, "title");
 
 
         // Create the TextButtons

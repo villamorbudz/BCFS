@@ -69,7 +69,7 @@ public class HistoryScreen implements Screen {
         table.setFillParent(true);
         table.pad(50).padTop(25).top().left();
 
-        historyLabel = new Label("HISTORY", skin);
+        historyLabel = new Label("HISTORY", skin, "title");
         backButton = new TextButton("BACK", skin);
         historyScrollPane = new ScrollPane(gameHistoryTable, skin);
 
