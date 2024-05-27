@@ -97,6 +97,8 @@ public class LandingScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 // Handle Button Click
                 System.out.println("CHALLENGE");
+                game.setScreen(new ChallengeScreen(game));
+                dispose();
             }
         });
 
