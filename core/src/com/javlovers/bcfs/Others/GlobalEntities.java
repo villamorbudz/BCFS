@@ -8,6 +8,5 @@ public class GlobalEntities {
     public static Cock CurrentCock = null;
     public static void setCurrentUser(User currUser){
         currentUser = currUser;
-        CurrentCock = new Cock("",currentUser.getUserID());
     }
 }

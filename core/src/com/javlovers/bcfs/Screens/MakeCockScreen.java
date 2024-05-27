@@ -47,7 +47,7 @@ public class MakeCockScreen implements Screen {
 
     public MakeCockScreen(final BCFS gam) {
         game = gam;
-        tempCock = new Cock("",GlobalEntities.currentUser.getUserID());
+
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1280, 720);
@@ -83,6 +83,16 @@ public class MakeCockScreen implements Screen {
         cockAttacks.add(new TextButton("ATTACK 4", skin, "toggle"));
         table.setFillParent(true);
         table.pad(25).left();
+        if(GlobalEntities.CurrentCock == null){
+            tempCock = new Cock("",GlobalEntities.currentUser.getUserID());
+        }else {
+            tempCock = GlobalEntities.CurrentCock;
+            cockNameTextField.setText(tempCock.getName());
+            ArrayList<Attack> Atks = tempCock.getAttackList();
+            for(int x = 0;x<Atks.size();x++){
+                cockAttacks.getButtons().get(x).setText(Atks.get(x).getName());
+            }
+        }
     }
 
     @Override
