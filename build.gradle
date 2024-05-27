@@ -47,6 +47,7 @@ project(":desktop") {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+
     }
 }
 
@@ -55,6 +56,7 @@ project(":core") {
 
 
     dependencies {
+        implementation 'com.mysql:mysql-connector-j:8.4.0'
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
     }
 }
