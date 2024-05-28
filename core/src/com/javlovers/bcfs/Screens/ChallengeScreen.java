@@ -12,6 +12,10 @@ import com.javlovers.bcfs.BCFS;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.javlovers.bcfs.Others.GlobalEntities;
+import com.javlovers.bcfs.Screens.BackEnd.Globals.GlobalObjects;
+import com.javlovers.bcfs.Screens.BackEnd.Main.Attack;
+import com.javlovers.bcfs.Screens.BackEnd.Main.Cock;
 import org.w3c.dom.Text;
 
 import static com.badlogic.gdx.math.MathUtils.random;
@@ -135,16 +139,16 @@ public class ChallengeScreen implements Screen {
 
     // parse and send cockstats to the display
     private Label getCockStats() {
-        String attackName = "ATTACKNAME";
-        int param1 = random.nextInt(9999 - 1 + 1) + 1;
-        int param2 = random.nextInt(9999 - 1 + 1) + 1;
-        int param3 = random.nextInt(9999 - 1 + 1) + 1;
-        String sampleCockStats = attackName + "\n\n\n" +
-                "PARAM:   " + param1 + "\n\n" +
-                "PARAM:   " + param2 + "\n\n" +
-                "PARAM:   " + param3 + "\n";
-
-        Label cockStats = new Label(sampleCockStats, skin);
+        Cock curr = GlobalEntities.CurrentCock;
+        StringBuilder sb = new StringBuilder();
+        if(curr !=null){
+            String attackName = curr.getName();
+            sb.append(attackName + "\n\n\n");
+            for(Attack atk:curr.getAttackList()){
+                sb.append("ATTACK : " + atk.getName() + "\n\n");
+            }
+        }
+        Label cockStats = new Label(sb.toString(), skin);
         cockStats.setAlignment(center);
         return cockStats;
     }
