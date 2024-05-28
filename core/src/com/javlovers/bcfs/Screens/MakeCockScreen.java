@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -17,6 +18,8 @@ import com.javlovers.bcfs.Screens.BackEnd.DB.LocalHostConnection;
 import com.javlovers.bcfs.Screens.BackEnd.Globals.DBHelpers;
 import com.javlovers.bcfs.Screens.BackEnd.Main.Attack;
 import com.javlovers.bcfs.Screens.BackEnd.Main.Cock;
+import com.javlovers.bcfs.Screens.BackEnd.Main.MatchFacade;
+import com.javlovers.bcfs.Screens.BackEnd.Threading.MotherThreadController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +50,7 @@ public class MakeCockScreen implements Screen {
 
     public MakeCockScreen(final BCFS gam) {
         game = gam;
-        tempCock = new Cock("",GlobalEntities.currentUser.getUserID());
+
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1280, 720);
@@ -83,6 +86,17 @@ public class MakeCockScreen implements Screen {
         cockAttacks.add(new TextButton("ATTACK 4", skin, "toggle"));
         table.setFillParent(true);
         table.pad(25).left();
+        if(GlobalEntities.CurrentCock == null){
+            tempCock = new Cock("",GlobalEntities.currentUser.getUserID());
+            tempCock.setCockID(0);
+        }else {
+            tempCock = GlobalEntities.CurrentCock;
+            cockNameTextField.setText(tempCock.getName());
+            ArrayList<Attack> Atks = tempCock.getAttackList();
+            for(int x = 0;x<Atks.size();x++){
+                cockAttacks.getButtons().get(x).setText(Atks.get(x).getName());
+            }
+        }
     }
 
     @Override
@@ -169,7 +183,35 @@ public class MakeCockScreen implements Screen {
         testButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                if(GlobalEntities.CurrentCock == null) return;
                 // Handle Test Button Click
+                DBHelpers dbh = new DBHelpers(DBHelpers.getGlobalConnection());
+                HashMap<Integer,Cock> AllC = dbh.getAllCockData();
+                ArrayList<Integer> AC = new ArrayList<>(AllC.keySet());
+                ArrayList<MatchFacade> Fights = new ArrayList<>();
+                Cock currC = GlobalEntities.CurrentCock;
+                AllC.put(0,currC);
+                for(Integer CID : AC){
+                    MatchFacade mf = new MatchFacade(CID,currC.getCockID(),AllC.get(CID).getCockID());
+                    Fights.add(mf);
+                }MotherThreadController MTC = new MotherThreadController(Fights,5,AllC);
+                Thread MotherThread = new Thread(MTC);
+                MotherThread.start();
+                while(MotherThread.isAlive()){
+                    System.out.println("Mother is Looping");
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                HashMap<Integer,Integer> ResultFinal = MTC.getThreadResults();
+                int wins = 0;
+                for(Integer EnemyID : ResultFinal.keySet()){
+                    if(ResultFinal.get(EnemyID) == 0) wins++;
+                }
+                System.out.println("Wins " + wins);
+                System.out.println("Loses " + (ResultFinal.keySet().size() - wins));
                 System.out.println("TEST");
             }
         });

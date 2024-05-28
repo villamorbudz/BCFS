@@ -119,12 +119,19 @@ public class Cock implements Cloneable{
     public boolean setAttack(Attack atk,int index){
         try {
             attackList.set(index, atk);
+            atk.setOwner(this);
             return true;
         }catch (IndexOutOfBoundsException e){
             attackList.add(atk);
             return false;
         }
     }
+
+    public Cock setName(String CockName){
+        name = CockName;
+        return this;
+    }
+
     public Cock addAttack(Attack newAttack) throws ArrayIndexOutOfBoundsException{
         if(attackList.size() > MAX_ATTACKS){
             throw new ArrayIndexOutOfBoundsException("AttackList is Full");
@@ -136,10 +143,6 @@ public class Cock implements Cloneable{
 
     public String getName() {
         return name;
-    }
-    public Cock setName(String CockName){
-        name = CockName;
-        return this;
     }
     public Cock resetCurrent(){
         int[][] AllStats = {damage, health, speed};
