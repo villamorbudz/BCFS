@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.javlovers.bcfs.Screens.LandingScreen;
+import com.javlovers.bcfs.Screens.LoginScreen;
 
 public class BCFS extends Game {
 	public SpriteBatch batch;
@@ -12,7 +13,7 @@ public class BCFS extends Game {
 	public void create() {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
-		this.setScreen(new LandingScreen(this));
+		this.setScreen(new LoginScreen(this));
 	}
 
 	public void render() {

@@ -4,9 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.javlovers.bcfs.BCFS;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,6 +23,7 @@ public class LandingScreen implements Screen {
     Stage stage;
     ArrayList<TextButton> buttons;
     Skin skin;
+    Texture backgroundTexture;  // Add this line
 
     public LandingScreen(final BCFS gam) {
         game = gam;
@@ -35,6 +36,9 @@ public class LandingScreen implements Screen {
 
         // Load the skin
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
+
+        // Load the background texture
+        backgroundTexture = new Texture(Gdx.files.internal("landingBG.gif"));
     }
 
     @Override
@@ -45,7 +49,7 @@ public class LandingScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
-
+        game.batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         game.batch.end();
 
         // Update and draw the stage
@@ -58,7 +62,6 @@ public class LandingScreen implements Screen {
         buttons = new ArrayList<>();
 
         Label gameTitle = new Label("BIG COCK FIGHTING SIMULATOR", skin, "title");
-
 
         // Create the TextButtons
         TextButton makeButton = new TextButton("MAKE", skin);
@@ -167,5 +170,6 @@ public class LandingScreen implements Screen {
     public void dispose() {
         stage.dispose();
         skin.dispose(); // Dispose of the skin
+        backgroundTexture.dispose(); // Dispose of the background texture
     }
 }

@@ -15,7 +15,7 @@
 			"r": 0,
 			"g": 0,
 			"b": 0,
-			"a": 0.9019608
+			"a": 0
 		},
 		"black": {
 			"r": 0,
@@ -422,6 +422,10 @@
 			"font": "font",
 			"fontColor": "color",
 			"up": "button-c"
+		},
+		"label": {
+			"font": "font",
+			"fontColor": "color"
 		}
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
