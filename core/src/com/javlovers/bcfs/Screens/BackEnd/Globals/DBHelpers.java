@@ -104,28 +104,32 @@ public class DBHelpers {
         return result;
     }
     public boolean sendToTempCock(Cock cock){
-        ArrayList<Attack> lists = cock.getAttackList();
-        boolean result = false;
-        try (Connection c = dbConnection.getConnection();
-             PreparedStatement ps = c.prepareStatement("INSERT INTO `tblCurrCock` (`OwnerID`, `CockName`, `Attack1ID`, `Attack2ID`, `Attack3ID`, `Attack4ID`) VALUES (?, ?, ? , ? , ? , ?) ON DUPLICATE KEY UPDATE CurrID = VALUES(CurrID)")) {
-            int startInd = 3;
-            ps.setInt(1, cock.getOwnerID());
-            ps.setString(2, cock.getName());
-            for (Attack atk : lists) {
-                int atkID = AttackHelper.attackModuleToInt(atk.getAttackModule());
-                ps.setInt(startInd++, atkID);
+        if(!valueExists("tblCurrCock","OwnerID",String.valueOf(cock.getOwnerID()))){
+            ArrayList<Attack> lists = cock.getAttackList();
+            boolean result = false;
+            try (Connection c = dbConnection.getConnection();
+                 PreparedStatement ps = c.prepareStatement("INSERT INTO `tblCurrCock` (`OwnerID`, `CockName`, `Attack1ID`, `Attack2ID`, `Attack3ID`, `Attack4ID`) VALUES (?, ?, ? , ? , ? , ?)")) {
+                int startInd = 3;
+                ps.setInt(1, cock.getOwnerID());
+                ps.setString(2, cock.getName());
+                for (Attack atk : lists) {
+                    int atkID = AttackHelper.attackModuleToInt(atk.getAttackModule());
+                    ps.setInt(startInd++, atkID);
+                }
+                while (startInd-2 <= Cock.MAX_ATTACKS) {
+                    ps.setInt(startInd++, 0);
+                }
+                System.out.println(ps.toString());
+                ps.execute();
+                System.out.println("Cock Insert Successfull");
+                // fetch cockdata
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-            while (startInd-2 <= Cock.MAX_ATTACKS) {
-                ps.setInt(startInd++, 0);
-            }
-            System.out.println(ps.toString());
-            ps.execute();
-            System.out.println("Cock Insert Successfull");
-            // fetch cockdata
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return result;
         }
-        return result;
+        return false;
+
     }
 
     public int getCockID(Cock cock){
@@ -420,8 +424,11 @@ public class DBHelpers {
             ps.setString(2, columnname);
             ps.setString(3,value);
             ResultSet rs = ps.executeQuery();
-            int number_of_rows = rs.getRow();
-            return number_of_rows!=0;
+            int number_of_rows = 0;
+            while (rs.next()) {
+                number_of_rows++;
+            }
+            return number_of_rows>0;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
