@@ -13,9 +13,17 @@ import com.javlovers.bcfs.BCFS;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.javlovers.bcfs.Others.GlobalEntities;
+import com.javlovers.bcfs.Screens.BackEnd.Globals.DBHelpers;
+import com.javlovers.bcfs.Screens.BackEnd.Main.Attack;
+import com.javlovers.bcfs.Screens.BackEnd.Main.Cock;
+import com.javlovers.bcfs.Screens.BackEnd.Main.User;
+
+import java.util.HashMap;
 
 import static com.badlogic.gdx.math.MathUtils.random;
 import static com.badlogic.gdx.utils.Align.center;
+import static com.badlogic.gdx.utils.Align.left;
 
 public class ChallengeScreen implements Screen {
     final BCFS game;
@@ -141,23 +149,38 @@ public class ChallengeScreen implements Screen {
 
     // parse and send cockstats to the display
     private Label getCockStats() {
-        String attackName = "ATTACKNAME";
-        int param1 = random.nextInt(9999 - 1 + 1) + 1;
-        int param2 = random.nextInt(9999 - 1 + 1) + 1;
-        int param3 = random.nextInt(9999 - 1 + 1) + 1;
-        String sampleCockStats = attackName + "\n\n\n" +
-                "PARAM:   " + param1 + "\n\n" +
-                "PARAM:   " + param2 + "\n\n" +
-                "PARAM:   " + param3 + "\n";
-
-        Label cockStats = new Label(sampleCockStats, skin);
+        Cock currCock = GlobalEntities.CurrentCock;
+        Label cockStats;
+        String labelText = "";
+        if(currCock != null){
+            String attackName = currCock.getName();
+            StringBuilder sb = new StringBuilder(attackName + "\n");
+            for(Attack atk: currCock.getAttackList()){
+                String atkName = atk.getName();
+                String atkDamage = String.valueOf(atk.getDamage());
+                String atkSpeed = String.valueOf(atk.getSpeed());
+                sb.append("\n\n"+atkName+"\t"+atkDamage+"\t"+atkSpeed);
+            }
+            sb.append("\n");
+            labelText = sb.toString();
+        }
+        cockStats = new Label(labelText, skin);
         cockStats.setAlignment(center);
         return cockStats;
     }
 
     private void getPlayerList() {
-        for(int i = 0; i < 5; i++) {
-            sampleRequestChallenge = new TextButton("PLAYER " + i, skin);
+        DBHelpers dbh = new DBHelpers(DBHelpers.getGlobalConnection());
+        HashMap<Integer,String> allPlayer = dbh.getAllDIsplayNames();
+        for(Integer UserID: allPlayer.keySet()) {
+            sampleRequestChallenge = new TextButton("PLAYER " + allPlayer.get(UserID), skin);
+            sampleRequestChallenge.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    // Handle Button Click
+                    System.out.println("BACK");
+                }
+            });
             challengeListContainer.add(sampleRequestChallenge).padLeft(75).padRight(75).padBottom(5).padTop(5).growX().height(50).top();
             challengeListContainer.row();
         }

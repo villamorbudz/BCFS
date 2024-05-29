@@ -12,6 +12,11 @@ import com.javlovers.bcfs.BCFS;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.javlovers.bcfs.Others.GlobalEntities;
+import com.javlovers.bcfs.Screens.BackEnd.Globals.DBHelpers;
+import com.javlovers.bcfs.Screens.BackEnd.Main.User;
+import sun.rmi.server.UnicastServerRef;
+
 import java.util.ArrayList;
 
 public class LoginScreen implements Screen {
@@ -90,6 +95,7 @@ public class LoginScreen implements Screen {
         signUpRedirectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+
                 // Handle Button Click
                 System.out.println("SIGN UP");
                 game.setScreen(new SignUpScreen(game));
@@ -100,10 +106,19 @@ public class LoginScreen implements Screen {
         loginButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                DBHelpers dbh = new DBHelpers(DBHelpers.getGlobalConnection());
+                String Username = usernameField.getText();;
+                String Password = passwordField.getText();
+                User res = dbh.LoginUser(Username,Password);
+                if (res != null) {
+                    GlobalEntities.setCurrentUser(res);
+                    System.out.println("LOGGING IN");
+                    game.setScreen(new LandingScreen(game));
+                    dispose();
+                }else{
+                    serverMessage.setText("Incorrect Credentials, Please Try Again");
+                }
                 // Handle Button Click
-                System.out.println("LOGGING IN");
-                game.setScreen(new LandingScreen(game));
-                dispose();
             }
         });
     }

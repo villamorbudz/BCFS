@@ -60,11 +60,16 @@ public class DBHelpers {
     }
     public User LoginUser(String Username, String Password) {
         try (Connection c = dbConnection.getConnection();
-             PreparedStatement ps = c.prepareStatement("SELECT UserID,DisplayName FROM tbluser WHERE Username = ? AND Password = ?")) {
+             PreparedStatement ps = c.prepareStatement("SELECT count(*) as RECORDCOUNT,UserID,DisplayName FROM tbluser WHERE Username = ? AND Password = ?")) {
             ps.setString(1, Username);
             ps.setString(2, Password);
             ResultSet rs = ps.executeQuery();
             rs.next();
+            int rows = rs.getInt("RECORDCOUNT");
+            if(rows == 0){
+                System.out.println("Something is not right");
+                return null;
+            }
             int UID = rs.getInt("UserID");
             String DisplayName = rs.getString("DisplayName");
             User.setCurrentUser(DisplayName,UID);
