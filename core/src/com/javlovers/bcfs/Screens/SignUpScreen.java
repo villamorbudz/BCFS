@@ -21,7 +21,7 @@ public class SignUpScreen implements Screen {
     OrthographicCamera camera;
     Stage stage;
     Skin skin;
-    Skin buttonSkin;
+    Skin customSkin;
     Label signUpLabel;
     Label serverMessage;
     Table table;
@@ -44,21 +44,21 @@ public class SignUpScreen implements Screen {
 
         // Load the skin
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
-        buttonSkin = new Skin(Gdx.files.internal("custom_ui/buttons.json"));
+        customSkin = new Skin(Gdx.files.internal("custom_ui/custom_ui.json"));
         background = new Texture(Gdx.files.internal("userAuthBG.jpg"));
         table = new Table();
 
-        signUpLabel = new Label("CREATE ACCOUNT", skin, "title");
+        signUpLabel = new Label("CREATE ACCOUNT", customSkin);
         serverMessage = new Label("", skin);
 
-        signUpButton = new TextButton("CREATE ACCOUNT", buttonSkin);
+        signUpButton = new TextButton("CREATE ACCOUNT", customSkin);
         loginRedirectButton = new TextButton("Already have an account? Log in", skin, "label");
-        usernameField = new TextField("", skin);
+        usernameField = new TextField("", customSkin);
         usernameField.setMessageText("Username");
         displayNameField = new TextField("", skin);
         displayNameField.setMessageText("Display Name");
 
-        passwordField = new TextField("", skin);
+        passwordField = new TextField("", customSkin);
         passwordField.setMessageText("Password");
         passwordField.setPasswordMode(true);
         passwordField.setPasswordCharacter('*');
@@ -88,8 +88,8 @@ public class SignUpScreen implements Screen {
         float buttonSpacing = 25f;
         table.add(signUpLabel).padBottom(50).row();
         table.add(displayNameField).width(600).height(75).padBottom(buttonSpacing).row();
-        table.add(usernameField).width(600).height(75).padBottom(buttonSpacing).row();
-        table.add(passwordField).width(600).height(75).padBottom(buttonSpacing).row();
+        table.add(usernameField).width(450).height(60).padBottom(buttonSpacing).row();
+        table.add(passwordField).width(450).height(60).padBottom(buttonSpacing).row();
         table.add(signUpButton).width(400).padTop(25).height(50).row();
         table.add(loginRedirectButton).padTop(50).row();
         table.add(serverMessage).padTop(50);

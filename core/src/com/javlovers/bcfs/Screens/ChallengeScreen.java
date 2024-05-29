@@ -32,6 +32,7 @@ public class ChallengeScreen implements Screen {
     OrthographicCamera camera;
     Stage stage;
     Skin skin;
+    Skin customSkin;
     Table mainTable;
         Table sidebarTable;
             TextButton backButton;
@@ -58,6 +59,7 @@ public class ChallengeScreen implements Screen {
 
         // Load the skin
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
+        customSkin = new Skin(Gdx.files.internal("custom_ui/custom_ui.json"));
 
         background = new Texture(Gdx.files.internal("landingBG.gif"));
 
@@ -70,11 +72,11 @@ public class ChallengeScreen implements Screen {
                 challengeButtonBar = new Table();
 
 
-        editCockButton = new TextButton("EDIT COCK", skin);
+        editCockButton = new TextButton("EDIT COCK", customSkin);
         cockStats = new TextButton("", skin, "display");
-        backButton = new TextButton("BACK", skin);
+        backButton = new TextButton("BACK", customSkin);
 
-        challengesLabel = new Label("SELECT USER TO CHALLENGE", skin, "title");
+        challengesLabel = new Label("SELECT USER TO CHALLENGE", customSkin);
 
     }
 
@@ -181,7 +183,7 @@ public class ChallengeScreen implements Screen {
         Set<Integer> ks = allTempC.keySet();
         for(Integer UserID: allPlayer.keySet()) {
             if(ks.contains(UserID)){
-                sampleRequestChallenge = new TextButton("PLAYER " + allPlayer.get(UserID), skin);
+                sampleRequestChallenge = new TextButton(allPlayer.get(UserID), customSkin);
                 sampleRequestChallenge.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
@@ -191,7 +193,7 @@ public class ChallengeScreen implements Screen {
                         }
                     }
                 });
-                challengeListContainer.add(sampleRequestChallenge).padLeft(75).padRight(75).padBottom(5).padTop(5).growX().height(50).top();
+                challengeListContainer.add(sampleRequestChallenge).padLeft(75).padRight(75).padBottom(5).padTop(5).width(600).height(50).top();
                 challengeListContainer.row();
             }
         }

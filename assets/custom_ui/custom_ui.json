@@ -1,81 +1,88 @@
 {
-com.badlogic.gdx.graphics.g2d.BitmapFont: {
-	angrybirds_regular: {
-		file: angrybirds-regular.fnt
-		scaledSize: -1
-		markupEnabled: false
-		flip: false
+	"com.badlogic.gdx.graphics.g2d.BitmapFont": {
+		"angrybirds_regular": {
+			"file": "angrybirds-regular.fnt",
+			"scaledSize": -1,
+			"markupEnabled": false,
+			"flip": false
+		},
+		"pixeloid_sans": {
+			"file": "pixeloid_sans.fnt",
+			"scaledSize": -1,
+			"markupEnabled": false,
+			"flip": false
+		},
+		"pixeloid_sans_bold": {
+			"file": "pixeloid_sans_bold.fnt",
+			"scaledSize": -1,
+			"markupEnabled": false,
+			"flip": false
+		}
+	},
+	"com.badlogic.gdx.graphics.Color": {
+		"RGBA_107_80_82_255": {
+			"r": 0.41960785,
+			"g": 0.3137255,
+			"b": 0.32156864,
+			"a": 1
+		},
+		"RGBA_234_187_39_255": {
+			"r": 0.91764706,
+			"g": 0.73333335,
+			"b": 0.15294118,
+			"a": 1
+		},
+		"RGBA_255_255_255_255": {
+			"r": 1,
+			"g": 1,
+			"b": 1,
+			"a": 1
+		}
+	},
+	"com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle": {
+		"default": {
+			"up": "btn_blank",
+			"down": "btn_blank_down",
+			"over": "btn_blank_hover"
+		},
+		"logo": {
+			"up": "logo"
+		}
+	},
+	"com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
+		"default": {
+			"font": "angrybirds_regular",
+			"fontColor": "RGBA_234_187_39_255"
+		}
+	},
+	"com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
+		"default": {
+			"font": "pixeloid_sans_bold",
+			"fontColor": "RGBA_107_80_82_255",
+			"up": "btn_blank",
+			"down": "btn_blank_down",
+			"over": "btn_blank_hover",
+			"pressedOffsetY": -6,
+			"unpressedOffsetY": 3
+		},
+		"toggle": {
+			"font": "pixeloid_sans_bold",
+			"fontColor": "RGBA_107_80_82_255",
+			"up": "btn_blank",
+			"down": "btn_blank_down",
+			"checked": "btn_blank_hover"
+		}
+	},
+	"com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
+		"default": {
+			"font": "pixeloid_sans",
+			"fontColor": "RGBA_107_80_82_255",
+			"background": "field_text_field"
+		}
+	},
+	"com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle": {
+		"default": {
+			"label": "default"
+		}
 	}
-	pixeloid_sans: {
-		file: pixeloid_sans.fnt
-		scaledSize: -1
-		markupEnabled: false
-		flip: false
-	}
-	pixeloid_sans_bold: {
-		file: pixeloid_sans_bold.fnt
-		scaledSize: -1
-		markupEnabled: false
-		flip: false
-	}
-}
-com.badlogic.gdx.graphics.Color: {
-	RGBA_107_80_82_255: {
-		r: 0.41960785
-		g: 0.3137255
-		b: 0.32156864
-		a: 1
-	}
-	RGBA_234_187_39_255: {
-		r: 0.91764706
-		g: 0.73333335
-		b: 0.15294118
-		a: 1
-	}
-	RGBA_255_255_255_255: {
-		r: 1
-		g: 1
-		b: 1
-		a: 1
-	}
-}
-com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
-	default: {
-		up: btn_blank
-		down: btn_blank_down
-		over: btn_blank_hover
-	}
-	logo: {
-		up: logo
-	}
-}
-com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
-	default: {
-		font: angrybirds_regular
-		fontColor: RGBA_234_187_39_255
-	}
-}
-com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-	default: {
-		font: pixeloid_sans_bold
-		fontColor: RGBA_107_80_82_255
-		up: btn_blank
-		down: btn_blank_down
-		over: btn_blank_hover
-		pressedOffsetY: -6
-		unpressedOffsetY: 3
-	}
-}
-com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
-	default: {
-		font: pixeloid_sans
-		fontColor: RGBA_107_80_82_255
-		background: field_text_field
-	}
-}
-com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
-	default: {
-		label: default
-	}
-}
 }

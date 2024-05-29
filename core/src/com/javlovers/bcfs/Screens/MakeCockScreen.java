@@ -31,6 +31,7 @@ public class MakeCockScreen implements Screen {
     OrthographicCamera camera;
     Stage stage;
     Skin skin;
+    Skin customSkin;
     ButtonGroup<TextButton> cockAttacks;
     Table table;
     Table sidebarTable;
@@ -60,6 +61,7 @@ public class MakeCockScreen implements Screen {
 
         // Load the skin
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
+        customSkin = new Skin(Gdx.files.internal("custom_ui/custom_ui.json"));
 
         // Initialize
         table = new Table();
@@ -68,14 +70,14 @@ public class MakeCockScreen implements Screen {
         attackListTable = new Table();
         attackTraversalButtonBar = new Table();
 
-        cockNameTextField = new TextField("", skin);
+        cockNameTextField = new TextField("", customSkin);
         attacksText = new Label("ATTACKS", skin, "title");
 
         nameText = new Label("NAME: ", skin,"title");
 
-        backButton = new TextButton("BACK", skin);
-        saveButton = new TextButton("SAVE", skin);
-        testButton = new TextButton("TEST", skin);
+        backButton = new TextButton("BACK", customSkin);
+        saveButton = new TextButton("SAVE", customSkin);
+        testButton = new TextButton("TEST", customSkin);
 
         cockAttacks = new ButtonGroup<>();
         cockAttacks.setMaxCheckCount(1);
@@ -132,7 +134,7 @@ public class MakeCockScreen implements Screen {
         // Cock Name TextField
         Table cockNameSubtable = new Table();
         cockNameSubtable.add(nameText).padRight(25).left();
-        cockNameSubtable.add(cockNameTextField).width(250).left();
+        cockNameSubtable.add(cockNameTextField).width(250).height(50).left();
         sidebarTable.add(cockNameSubtable).center();
         sidebarTable.row();
 

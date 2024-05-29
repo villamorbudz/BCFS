@@ -11,8 +11,7 @@ import com.javlovers.bcfs.BCFS;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.javlovers.bcfs.Screens.BackEnd.DB.LocalHostConnection;
-import com.javlovers.bcfs.Screens.BackEnd.Globals.DBHelpers;
+import jdk.internal.net.http.common.Log;
 
 import java.util.ArrayList;
 
@@ -21,6 +20,7 @@ public class SettingsScreen implements Screen {
     OrthographicCamera camera;
     Stage stage;
     Skin skin;
+    Skin customSkin;
     Table table;
     Label accountLabel;
     Label usernameLabel;
@@ -41,21 +41,21 @@ public class SettingsScreen implements Screen {
 
         // Load the skin
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
-
+        customSkin = new Skin(Gdx.files.internal("custom_ui/custom_ui.json"));
         table = new Table();
 
         accountLabel = new Label("ACCOUNT SETTINGS", skin, "title");
         usernameLabel = new Label("EDIT USERNAME", skin);
         passwordLabel = new Label("CHANGE PASSWORD", skin);
 
-        usernameField = new TextField("", skin);
-        passwordField = new TextField("", skin);
+        usernameField = new TextField("", customSkin);
+        passwordField = new TextField("", customSkin);
         passwordField.setPasswordMode(true);
         passwordField.setPasswordCharacter('*');
 
-        backButton = new TextButton("BACK", skin);
-        saveButton = new TextButton("SAVE", skin);
-        logOutButton = new TextButton("LOG OUT", skin);
+        backButton = new TextButton("BACK", customSkin);
+        saveButton = new TextButton("SAVE", customSkin);
+        logOutButton = new TextButton("LOG OUT", customSkin);
     }
 
     @Override
@@ -99,16 +99,16 @@ public class SettingsScreen implements Screen {
                 // Handle Button Click
                 System.out.println("BACK");
                 game.setScreen(new LandingScreen(game));
-                String username = usernameField.getText().toString();
-                String password = passwordField.getText().toString();
+                dispose();
+            }
+        });
 
-
-                DBHelpers dbh = new DBHelpers(new LocalHostConnection());
-
-//                TODO get displayname, and userID
-//                dbh.updateDetails();
-
-
+        logOutButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Handle Button Click
+                System.out.println("LOGGING OUT...");
+                game.setScreen(new LoginScreen(game));
                 dispose();
             }
         });
