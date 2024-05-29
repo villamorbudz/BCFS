@@ -1,0 +1,62 @@
+
+custom_ui.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+angrybirds-regular
+  rotate: false
+  xy: 1, 231
+  size: 506, 64
+  orig: 506, 64
+  offset: 0, 0
+  index: -1
+pixeloid_sans
+  rotate: false
+  xy: 1298, 1739
+  size: 506, 63
+  orig: 506, 63
+  offset: 0, 0
+  index: -1
+pixeloid_sans_bold
+  rotate: false
+  xy: 1298, 1658
+  size: 505, 79
+  orig: 505, 79
+  offset: 0, 0
+  index: -1
+logo
+  rotate: false
+  xy: 1, 1203
+  size: 1080, 407
+  orig: 1080, 407
+  offset: 0, 0
+  index: -1
+btn_blank
+  rotate: false
+  xy: 1, 901
+  size: 1079, 300
+  orig: 1079, 300
+  offset: 0, 0
+  index: -1
+btn_blank_down
+  rotate: false
+  xy: 1, 297
+  size: 1079, 300
+  orig: 1079, 300
+  offset: 0, 0
+  index: -1
+btn_blank_hover
+  rotate: false
+  xy: 1, 599
+  size: 1079, 300
+  orig: 1079, 300
+  offset: 0, 0
+  index: -1
+field_text_field
+  rotate: false
+  xy: 1, 1612
+  size: 1295, 190
+  orig: 1295, 190
+  offset: 0, 0
+  index: -1
