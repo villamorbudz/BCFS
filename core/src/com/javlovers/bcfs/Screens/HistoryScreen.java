@@ -11,8 +11,10 @@ import com.javlovers.bcfs.BCFS;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.javlovers.bcfs.CockfightGame;
 
 import static com.badlogic.gdx.utils.Align.center;
+import static com.javlovers.bcfs.CockfightGame.*;
 
 public class HistoryScreen implements Screen {
     final BCFS game;
@@ -223,7 +225,12 @@ public class HistoryScreen implements Screen {
         gameInfoTable.add(param3);
 
     }
+
+
     private void getFightReplay() {
+        CockfightGame cockfightGame = new CockfightGame();
+        cockfightGame.create();
+
         attacksSequenceTable.add(attackLogs).width(800).height(300).bottom();
         attackLogs.setDisabled(true);
         gameInfoTable.add(attacksSequenceTable).center();
