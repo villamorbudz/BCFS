@@ -86,6 +86,7 @@ public class MakeCockScreen implements Screen {
         cockAttacks.add(new TextButton("ATTACK 4", skin, "toggle"));
         table.setFillParent(true);
         table.pad(25).left();
+
         if(GlobalEntities.CurrentCock == null){
             tempCock = new Cock("",GlobalEntities.currentUser.getUserID());
             tempCock.setCockID(0);
@@ -194,7 +195,7 @@ public class MakeCockScreen implements Screen {
                 for(Integer CID : AC){
                     MatchFacade mf = new MatchFacade(CID,currC.getCockID(),AllC.get(CID).getCockID());
                     Fights.add(mf);
-                }MotherThreadController MTC = new MotherThreadController(Fights,5,AllC);
+                } MotherThreadController MTC = new MotherThreadController(Fights,5,AllC);
                 Thread MotherThread = new Thread(MTC);
                 MotherThread.start();
                 while(MotherThread.isAlive()){
