@@ -12,7 +12,7 @@ import com.javlovers.bcfs.Screens.BackEnd.Main.User;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		// DB SetUp
-		DBHelpers.setGlobalConnection(new LocalHostConnection());
+		DBHelpers.setGlobalConnection(new MySQLConnection());
 		//Change This
 		User.setCurrentUser("Mana",1);
 		GlobalEntities.setCurrentUser(User.getCurrUser());

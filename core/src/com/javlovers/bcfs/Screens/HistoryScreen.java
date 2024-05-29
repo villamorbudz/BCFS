@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.javlovers.bcfs.BCFS;
@@ -12,6 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.javlovers.bcfs.CockfightGame;
+import com.javlovers.bcfs.Others.GlobalEntities;
+import com.javlovers.bcfs.Screens.BackEnd.Globals.DBHelpers;
+import com.javlovers.bcfs.Screens.BackEnd.Main.Cock;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.badlogic.gdx.utils.Align.center;
 
@@ -122,10 +129,13 @@ public class HistoryScreen implements Screen {
         sidebarTable.add(historyLabel).padBottom(25).center();
         sidebarTable.row();
 
-        // TODO: implement getter for games from the player
-        String enemyName = "player2";
+        DBHelpers dbh = new DBHelpers(DBHelpers.getGlobalConnection());
 
-        for (int i = 1; i <= 50; i++) {
+        HashMap<Integer, ArrayList<Integer>> History = dbh.getMatchesByUser(GlobalEntities.currentUser.getUserID());
+
+        // TODO: implement getter for games from the player
+        for(Integer MatchID: History.keySet()){
+            String enemyName = "Match: " + MatchID;
             TextButton gameButton = new TextButton("", skin, "toggle");
             Label gameButtonLabel = new Label(enemyName, skin);
             gameButton.setLabel(gameButtonLabel);
@@ -135,12 +145,12 @@ public class HistoryScreen implements Screen {
             gameHistoryTable.add(gameButton).width(350).height(60).padBottom(buttonSpacing).center();
             gameHistoryTable.row();
 
-            next.addListener(new ClickListener() {
+            gameButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (next.isChecked()) {
+                    if (gameButton.isChecked()) {
                         // getGameInfo
-                        showFightReplay();
+                        getAttackCards(History.get(MatchID));
                     } else {
                         // clearInfoTable
                     }
@@ -148,7 +158,8 @@ public class HistoryScreen implements Screen {
             });
         }
 
-        getAttackCards();
+
+
 
         gameInfoContainer.add(gameInfoTable).row();
         table.add(gameInfoContainer).grow().top().row();
@@ -190,7 +201,7 @@ public class HistoryScreen implements Screen {
         switch(i) {
             case 1:
                 gameInfoTable.clear();
-                getAttackCards();
+                //getAttackCards();
                 break;
             case 2:
                 gameInfoTable.clear();
@@ -199,10 +210,16 @@ public class HistoryScreen implements Screen {
         }
     }
 
-    private void getAttackCards() {
-        // fetch from DB
-        userLabel.setText("cockName (You)");
-        enemyLabel.setText("cockName (enemy)");
+    private void getAttackCards(ArrayList<Integer> MatchResult) {
+        DBHelpers dbh = new DBHelpers(DBHelpers.getGlobalConnection());
+        HashMap<Integer, Cock> AllC = dbh.getAllCockData();
+        HashMap<Integer,String>DisplayNames = dbh.getAllDIsplayNames();
+        Cock C1 = AllC.get(MatchResult.get(0));
+        Cock C2 = AllC.get(MatchResult.get(1));
+        String p1 = DisplayNames.get(C1.getOwnerID());
+        String p2 = DisplayNames.get(C2.getOwnerID());
+        userLabel.setText(String.format("%s (%s)",C1.getName(),p1));
+        enemyLabel.setText(String.format("%s (%s)",C2.getName(),p2));
 
         gameInfoTable.add(userLabel).growX().padLeft(15).colspan(3).left().row();
         userAttackCards = new Table();
