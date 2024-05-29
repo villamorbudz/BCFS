@@ -1,9 +1,12 @@
 package com.javlovers.bcfs.Screens.BackEnd.Globals;
 
 import com.javlovers.bcfs.Screens.BackEnd.Attacks.AttackModule;
+import com.javlovers.bcfs.Screens.BackEnd.Attacks.Heal;
+import com.javlovers.bcfs.Screens.BackEnd.Attacks.Leech;
 import com.javlovers.bcfs.Screens.BackEnd.Builders.AttackModuleBuilder;
 import com.javlovers.bcfs.Screens.BackEnd.DB.AttackHelper;
 import com.javlovers.bcfs.Screens.BackEnd.DB.DBConnection;
+import com.javlovers.bcfs.Screens.BackEnd.DB.LocalHostConnection;
 import com.javlovers.bcfs.Screens.BackEnd.Main.Attack;
 import com.javlovers.bcfs.Screens.BackEnd.Main.Cock;
 import com.javlovers.bcfs.Screens.BackEnd.Main.MatchFacade;
@@ -13,8 +16,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 
 public class DBHelpers {
+
+
 
     /**is an interface to allow modularity in connections**/
     private static DBConnection dbConnection;
@@ -28,6 +34,7 @@ public class DBHelpers {
         return globalConnection;
     }
 
+
     public static void setGlobalConnection(DBConnection dbc){
         System.out.println("GC set");
         globalConnection = dbc;
@@ -37,8 +44,8 @@ public class DBHelpers {
         HashMap<Integer, Attack> allAttacks = new HashMap<>();
         try (Connection C = dbConnection.getConnection();
              Statement statement = C.createStatement()) {
-            String querry = "SELECT * FROM tblattack";
-            ResultSet rs = statement.executeQuery(querry);
+            String query = "SELECT * FROM tblattack";
+            ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
                 String aName = rs.getString("name");
                 int aSpeed = rs.getInt("speed");
@@ -103,8 +110,8 @@ public class DBHelpers {
         }
         return result;
     }
-    public boolean sendToTempCock(Cock cock){
-        if(!valueExists("tblCurrCock","OwnerID",String.valueOf(cock.getOwnerID()))){
+    public boolean sendToTempCock(Cock cock) {
+        if (!valueExists("tblCurrCock", "OwnerID", String.valueOf(cock.getOwnerID()), false)) {
             ArrayList<Attack> lists = cock.getAttackList();
             boolean result = false;
             try (Connection c = dbConnection.getConnection();
@@ -116,20 +123,43 @@ public class DBHelpers {
                     int atkID = AttackHelper.attackModuleToInt(atk.getAttackModule());
                     ps.setInt(startInd++, atkID);
                 }
-                while (startInd-2 <= Cock.MAX_ATTACKS) {
+
+                while (startInd - 2 <= Cock.MAX_ATTACKS) {
                     ps.setInt(startInd++, 0);
                 }
                 System.out.println(ps.toString());
                 ps.execute();
-                System.out.println("Cock Insert Successfull");
-                // fetch cockdata
+                System.out.println("Cock Insertion Successfull");
+
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
             return result;
-        }
-        return false;
+        } else {
+            System.out.println("duplicate entry");
+            ArrayList<Attack> lists = cock.getAttackList();
+            boolean result = false;
+            try (Connection c = dbConnection.getConnection();
+                 PreparedStatement ps = c.prepareStatement("UPDATE tblCurrCock  SET Attack1ID = ?, Attack2ID = ?, Attack3ID=?, Attack4ID=? where OwnerID = ?")) {
+                int startInd=1;
+                for (Attack atk : lists) {
+                    int atkID = AttackHelper.attackModuleToInt(atk.getAttackModule());
+                    ps.setInt(startInd++, atkID);
+                }
+                while (startInd-1 <= Cock.MAX_ATTACKS) {
+                    ps.setInt(startInd++, 0);
+                }
+                ps.setInt(5,cock.getOwnerID());
 
+
+                boolean success = ps.executeUpdate()>0;
+                if(success)System.out.println("Cock Update Successfull");
+                return success;
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public int getCockID(Cock cock){
@@ -417,12 +447,14 @@ public class DBHelpers {
         }
     }
 
-    public boolean valueExists(String tablename, String columnname, String value){
+    public boolean valueExists(String tablename, String columnname, String value, boolean isValueString){
         try (Connection c = dbConnection.getConnection();) {
-            PreparedStatement ps = c.prepareStatement("Select * from ? where ? = ?");
-            ps.setString(1,tablename);
-            ps.setString(2, columnname);
-            ps.setString(3,value);
+            PreparedStatement ps = c.prepareStatement("Select * from "+tablename+" where "+columnname+" = ?");
+            if(!isValueString){
+                ps.setInt(1,Integer.parseInt(value));
+            }else{
+                ps.setString(1,value);
+            }
             ResultSet rs = ps.executeQuery();
             int number_of_rows = 0;
             while (rs.next()) {
@@ -436,7 +468,7 @@ public class DBHelpers {
 
     public int createAccount(String DisplayName,String Username, String Password){
         try (Connection c = dbConnection.getConnection();) {
-            boolean usernameExists = valueExists("tbluser","Username",Username);
+            boolean usernameExists = valueExists("tbluser","Username",Username,true);
             if(usernameExists ){
                 System.out.println("Username already exists");
                 return -1;
