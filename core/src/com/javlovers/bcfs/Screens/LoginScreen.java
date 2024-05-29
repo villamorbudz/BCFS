@@ -25,6 +25,7 @@ public class LoginScreen implements Screen {
     OrthographicCamera camera;
     Stage stage;
     Skin skin;
+    Skin buttonSkin;
     Label loginLabel;
     Label serverMessage;
     Table table;
@@ -47,6 +48,8 @@ public class LoginScreen implements Screen {
 
         // Load the skin
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
+        buttonSkin = new Skin(Gdx.files.internal("custom_ui/buttons.json"));
+
         background = new Texture(Gdx.files.internal("userAuthBG.jpg"));
         renderer = new ShapeRenderer();
 
@@ -54,9 +57,9 @@ public class LoginScreen implements Screen {
         loginContainer = new Table(skin);
 
         loginLabel = new Label("LOG IN", skin, "title");
-        serverMessage = new Label("Server Message", skin);
+        serverMessage = new Label("", skin);
 
-        loginButton = new TextButton("LOG IN", skin);
+        loginButton = new TextButton("LOG IN", buttonSkin);
         signUpRedirectButton = new TextButton("Don't have an account? Create Account", skin, "label");
         usernameField = new TextField("", skin);
         usernameField.setMessageText("Username");

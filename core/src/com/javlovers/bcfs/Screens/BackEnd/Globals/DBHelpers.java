@@ -1,12 +1,9 @@
 package com.javlovers.bcfs.Screens.BackEnd.Globals;
 
 import com.javlovers.bcfs.Screens.BackEnd.Attacks.AttackModule;
-import com.javlovers.bcfs.Screens.BackEnd.Attacks.Heal;
-import com.javlovers.bcfs.Screens.BackEnd.Attacks.Leech;
 import com.javlovers.bcfs.Screens.BackEnd.Builders.AttackModuleBuilder;
 import com.javlovers.bcfs.Screens.BackEnd.DB.AttackHelper;
 import com.javlovers.bcfs.Screens.BackEnd.DB.DBConnection;
-import com.javlovers.bcfs.Screens.BackEnd.DB.LocalHostConnection;
 import com.javlovers.bcfs.Screens.BackEnd.Main.Attack;
 import com.javlovers.bcfs.Screens.BackEnd.Main.Cock;
 import com.javlovers.bcfs.Screens.BackEnd.Main.MatchFacade;
@@ -16,11 +13,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Locale;
 
 public class DBHelpers {
-
-
 
     /**is an interface to allow modularity in connections**/
     private static DBConnection dbConnection;
