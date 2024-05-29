@@ -103,6 +103,30 @@ public class DBHelpers {
         }
         return result;
     }
+    public boolean sendToTempCock(Cock cock){
+        ArrayList<Attack> lists = cock.getAttackList();
+        boolean result = false;
+        try (Connection c = dbConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement("INSERT INTO `tblCurrCock` (`OwnerID`, `CockName`, `Attack1ID`, `Attack2ID`, `Attack3ID`, `Attack4ID`) VALUES (?, ?, ? , ? , ? , ?) ON DUPLICATE KEY UPDATE CurrID = VALUES(CurrID)")) {
+            int startInd = 3;
+            ps.setInt(1, cock.getOwnerID());
+            ps.setString(2, cock.getName());
+            for (Attack atk : lists) {
+                int atkID = AttackHelper.attackModuleToInt(atk.getAttackModule());
+                ps.setInt(startInd++, atkID);
+            }
+            while (startInd-2 <= Cock.MAX_ATTACKS) {
+                ps.setInt(startInd++, 0);
+            }
+            System.out.println(ps.toString());
+            ps.execute();
+            System.out.println("Cock Insert Successfull");
+            // fetch cockdata
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
 
     public int getCockID(Cock cock){
             ArrayList<Attack> lists = cock.getAttackList();
@@ -138,17 +162,44 @@ public class DBHelpers {
             while(rs.next()){
                 Cock cock = new Cock(
                         rs.getString("CockName"),
-                        rs.getInt("UserID")
+                        rs.getInt("OwnerID")
                 );
                 int[] AttackIDs = {rs.getInt("Attack1ID"),rs.getInt("Attack2ID"),rs.getInt("Attack3ID"),rs.getInt("Attack4ID")};
-                cock.setCockID(rs.getInt("CockID"));
+                cock.setCockID(rs.getInt("CurrID"));
                 HashMap<Integer,Attack> allAttack = AttackHelper.fetchAllAttack();
                 for(int AIDs: AttackIDs){
                     if(AIDs == 0) break;
                     Attack tempAtk = AttackHelper.cloneAttack(allAttack.get(AIDs));
                     cock.addAttack(tempAtk);
                 }
-                cockData.put(rs.getInt("CockID"),cock);
+                cockData.put(rs.getInt("CurrID"),cock);
+            }
+            System.out.println("Cocks Fetched Successfully");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return cockData;
+    }
+    public HashMap<Integer,Cock> getAllCurrCockData(){
+        HashMap<Integer, Cock> cockData = null;
+        try(Connection c = dbConnection.getConnection();
+            PreparedStatement ps = c.prepareStatement("SELECT * FROM tblCurrCock")){
+            ResultSet rs = ps.executeQuery();
+            cockData = new HashMap<>();
+            while(rs.next()){
+                Cock cock = new Cock(
+                        rs.getString("CockName"),
+                        rs.getInt("OwnerID")
+                );
+                int[] AttackIDs = {rs.getInt("Attack1ID"),rs.getInt("Attack2ID"),rs.getInt("Attack3ID"),rs.getInt("Attack4ID")};
+                cock.setCockID(rs.getInt("CurrID"));
+                HashMap<Integer,Attack> allAttack = AttackHelper.fetchAllAttack();
+                for(int AIDs: AttackIDs){
+                    if(AIDs == 0) break;
+                    Attack tempAtk = AttackHelper.cloneAttack(allAttack.get(AIDs));
+                    cock.addAttack(tempAtk);
+                }
+                cockData.put(rs.getInt("OwnerID"),cock);
             }
             System.out.println("Cocks Fetched Successfully");
         } catch (SQLException e) {

@@ -87,6 +87,10 @@ public class MakeCockScreen implements Screen {
         table.setFillParent(true);
         table.pad(25).left();
 
+        DBHelpers dbh = new DBHelpers(DBHelpers.getGlobalConnection());
+        HashMap<Integer,Cock> tempCocks= dbh.getAllCurrCockData();
+        GlobalEntities.CurrentCock = tempCocks.get(GlobalEntities.currentUser.getUserID());
+
         if(GlobalEntities.CurrentCock == null){
             tempCock = new Cock("",GlobalEntities.currentUser.getUserID());
             tempCock.setCockID(0);
@@ -176,6 +180,8 @@ public class MakeCockScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 tempCock.setName(cockNameTextField.getText());
                 GlobalEntities.CurrentCock = tempCock;
+                DBHelpers dbh = new DBHelpers(DBHelpers.getGlobalConnection());
+                dbh.sendToTempCock(tempCock);
                 // Handle Save Button Click
                 System.out.println("SAVE");
             }

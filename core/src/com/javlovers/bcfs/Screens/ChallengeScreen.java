@@ -15,11 +15,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.javlovers.bcfs.Others.GlobalEntities;
 import com.javlovers.bcfs.Screens.BackEnd.Globals.DBHelpers;
+import com.javlovers.bcfs.Screens.BackEnd.Globals.Helpers;
 import com.javlovers.bcfs.Screens.BackEnd.Main.Attack;
 import com.javlovers.bcfs.Screens.BackEnd.Main.Cock;
 import com.javlovers.bcfs.Screens.BackEnd.Main.User;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import static com.badlogic.gdx.math.MathUtils.random;
 import static com.badlogic.gdx.utils.Align.center;
@@ -163,8 +165,11 @@ public class ChallengeScreen implements Screen {
             }
             sb.append("\n");
             labelText = sb.toString();
+        }else{
+            labelText = "Please Create A Cock";
         }
         cockStats = new Label(labelText, skin);
+
         cockStats.setAlignment(center);
         return cockStats;
     }
@@ -172,17 +177,23 @@ public class ChallengeScreen implements Screen {
     private void getPlayerList() {
         DBHelpers dbh = new DBHelpers(DBHelpers.getGlobalConnection());
         HashMap<Integer,String> allPlayer = dbh.getAllDIsplayNames();
+        HashMap<Integer,Cock> allTempC = dbh.getAllCurrCockData();
+        Set<Integer> ks = allTempC.keySet();
         for(Integer UserID: allPlayer.keySet()) {
-            sampleRequestChallenge = new TextButton("PLAYER " + allPlayer.get(UserID), skin);
-            sampleRequestChallenge.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    // Handle Button Click
-                    System.out.println("BACK");
-                }
-            });
-            challengeListContainer.add(sampleRequestChallenge).padLeft(75).padRight(75).padBottom(5).padTop(5).growX().height(50).top();
-            challengeListContainer.row();
+            if(ks.contains(UserID)){
+                sampleRequestChallenge = new TextButton("PLAYER " + allPlayer.get(UserID), skin);
+                sampleRequestChallenge.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        // Handle Button Click
+                        if(GlobalEntities.CurrentCock != null){
+                            int winner = Helpers.Fight(GlobalEntities.CurrentCock,allTempC.get(UserID));
+                        }
+                    }
+                });
+                challengeListContainer.add(sampleRequestChallenge).padLeft(75).padRight(75).padBottom(5).padTop(5).growX().height(50).top();
+                challengeListContainer.row();
+            }
         }
     }
 
