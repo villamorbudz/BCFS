@@ -134,16 +134,17 @@ public class DBHelpers {
             ArrayList<Attack> lists = cock.getAttackList();
             boolean result = false;
             try (Connection c = dbConnection.getConnection();
-                 PreparedStatement ps = c.prepareStatement("UPDATE tblCurrCock  SET Attack1ID = ?, Attack2ID = ?, Attack3ID=?, Attack4ID=? where OwnerID = ?")) {
+                 PreparedStatement ps = c.prepareStatement("UPDATE tblCurrCock  SET Attack1ID = ?, Attack2ID = ?, Attack3ID=?, Attack4ID=?,CockName=? where OwnerID = ?")) {
                 int startInd=1;
                 for (Attack atk : lists) {
-                    int atkID = AttackHelper.attackModuleToInt(atk.getAttackModule());
+                    int atkID = atk.getAttackID();
                     ps.setInt(startInd++, atkID);
                 }
                 while (startInd-1 <= Cock.MAX_ATTACKS) {
                     ps.setInt(startInd++, 0);
                 }
-                ps.setInt(5,cock.getOwnerID());
+                ps.setString(5,cock.getName());
+                ps.setInt(6,cock.getOwnerID());
 
 
                 boolean success = ps.executeUpdate()>0;

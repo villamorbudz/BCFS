@@ -90,7 +90,7 @@ public class MakeCockScreen implements Screen {
         DBHelpers dbh = new DBHelpers(DBHelpers.getGlobalConnection());
         HashMap<Integer,Cock> tempCocks= dbh.getAllCurrCockData();
         GlobalEntities.CurrentCock = tempCocks.get(GlobalEntities.currentUser.getUserID());
-
+        Cock cock = GlobalEntities.CurrentCock;
         if(GlobalEntities.CurrentCock == null){
             tempCock = new Cock("",GlobalEntities.currentUser.getUserID());
             tempCock.setCockID(0);
@@ -253,7 +253,7 @@ public class MakeCockScreen implements Screen {
         // Add field for attacktype, which defines the button skin to be used in the constructor
 
         // Attack Card Constructor
-        for (int i = 0; i < 3; i++) {
+         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 final int row = i;
                 final int col = j;

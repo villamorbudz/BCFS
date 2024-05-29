@@ -12,6 +12,9 @@ import com.javlovers.bcfs.BCFS;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.javlovers.bcfs.Screens.BackEnd.Globals.DBHelpers;
+
+import java.util.Objects;
 
 public class SignUpScreen implements Screen {
     final BCFS game;
@@ -25,6 +28,7 @@ public class SignUpScreen implements Screen {
     TextButton signUpButton;
     TextButton loginRedirectButton;
     TextField usernameField;
+    TextField displayNameField;
     TextField passwordField;
     Texture background;
 
@@ -51,6 +55,8 @@ public class SignUpScreen implements Screen {
         loginRedirectButton = new TextButton("Already have an account? Log in", skin, "label");
         usernameField = new TextField("", skin);
         usernameField.setMessageText("Username");
+        displayNameField = new TextField("", skin);
+        displayNameField.setMessageText("Display Name");
 
         passwordField = new TextField("", skin);
         passwordField.setMessageText("Password");
@@ -81,6 +87,7 @@ public class SignUpScreen implements Screen {
 
         float buttonSpacing = 25f;
         table.add(signUpLabel).padBottom(50).row();
+        table.add(displayNameField).width(600).height(75).padBottom(buttonSpacing).row();
         table.add(usernameField).width(600).height(75).padBottom(buttonSpacing).row();
         table.add(passwordField).width(600).height(75).padBottom(buttonSpacing).row();
         table.add(signUpButton).width(400).padTop(25).height(50).row();
@@ -89,10 +96,22 @@ public class SignUpScreen implements Screen {
 
         stage.addActor(table);
 
-        loginRedirectButton.addListener(new ClickListener() {
+        signUpButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Handle Button Click
+                String DisplayName = displayNameField.getText();
+                String UserName = usernameField.getText();
+                String Password = passwordField.getText();
+                if(Objects.equals(DisplayName, "") || Objects.equals(UserName, "") || Objects.equals(Password, "")){
+                    serverMessage.setColor(Color.RED);
+                    serverMessage.setText("Please Fill Out ALl Forms");
+                    return;
+                }
+                DBHelpers dbh = new DBHelpers(DBHelpers.getGlobalConnection());
+                int isSuccess = dbh.createAccount(DisplayName,UserName,Password);
+                if(isSuccess == -1){
+                    return;
+                }
                 System.out.println("SIGN UP");
                 game.setScreen(new LoginScreen(game));
                 dispose();
