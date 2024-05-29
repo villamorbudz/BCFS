@@ -5,7 +5,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -24,7 +23,7 @@ public class LandingScreen implements Screen {
     Stage stage;
     ArrayList<TextButton> buttons;
     Skin skin;
-    Skin buttonSkin;
+    Skin customSkin;
     Texture backgroundTexture;  // Add this line
 
     public LandingScreen(final BCFS gam) {
@@ -38,7 +37,7 @@ public class LandingScreen implements Screen {
 
         // Load the skin
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
-        buttonSkin = new Skin(Gdx.files.internal("custom_ui/buttons.json"));
+        customSkin = new Skin(Gdx.files.internal("custom_ui/custom_ui.json"));
 
 
         // Load the background texture
@@ -65,14 +64,14 @@ public class LandingScreen implements Screen {
     public void show() {
         buttons = new ArrayList<>();
 
-        Label gameTitle = new Label("BIG COCK FIGHTING SIMULATOR", skin, "title");
+        Label gameTitle = new Label("BIG COCK FIGHTING SIMULATOR", customSkin);
 
         // Create the TextButtons
-        TextButton makeButton = new TextButton("COCK UP", buttonSkin);
-        TextButton challengeButton = new TextButton("FIGHT", buttonSkin);
-        TextButton settingsButton = new TextButton("SETTINGS", buttonSkin);
-        TextButton historyButton = new TextButton("HISTORY", buttonSkin);
-        TextButton exitButton = new TextButton("EXIT", buttonSkin);
+        TextButton makeButton = new TextButton("COCK UP", customSkin);
+        TextButton challengeButton = new TextButton("FIGHT", customSkin);
+        TextButton settingsButton = new TextButton("SETTINGS", customSkin);
+        TextButton historyButton = new TextButton("HISTORY", customSkin);
+        TextButton exitButton = new TextButton("EXIT", customSkin);
 
         buttons.add(makeButton);
         buttons.add(challengeButton);
@@ -92,7 +91,7 @@ public class LandingScreen implements Screen {
         // Add buttons to the table with spacing
         float buttonSpacing = 20f;
         for (TextButton button : buttons) {
-            table.add(button).width(270).height(75).padBottom(buttonSpacing);
+            table.add(button).width(500).height(75).padBottom(buttonSpacing);
             table.row(); // Move to the next row after each button
         }
 

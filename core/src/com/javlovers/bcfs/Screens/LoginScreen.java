@@ -16,16 +16,13 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.javlovers.bcfs.Others.GlobalEntities;
 import com.javlovers.bcfs.Screens.BackEnd.Globals.DBHelpers;
 import com.javlovers.bcfs.Screens.BackEnd.Main.User;
-import sun.rmi.server.UnicastServerRef;
-
-import java.util.ArrayList;
 
 public class LoginScreen implements Screen {
     final BCFS game;
     OrthographicCamera camera;
     Stage stage;
     Skin skin;
-    Skin buttonSkin;
+    Skin customSkin;
     Label loginLabel;
     Label serverMessage;
     Table table;
@@ -48,7 +45,7 @@ public class LoginScreen implements Screen {
 
         // Load the skin
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
-        buttonSkin = new Skin(Gdx.files.internal("custom_ui/buttons.json"));
+        customSkin = new Skin(Gdx.files.internal("custom_ui/custom_ui.json"));
 
         background = new Texture(Gdx.files.internal("userAuthBG.jpg"));
         renderer = new ShapeRenderer();
@@ -56,15 +53,15 @@ public class LoginScreen implements Screen {
         table = new Table();
         loginContainer = new Table(skin);
 
-        loginLabel = new Label("LOG IN", skin, "title");
+        loginLabel = new Label("LOG IN", customSkin);
         serverMessage = new Label("", skin);
 
-        loginButton = new TextButton("LOG IN", buttonSkin);
+        loginButton = new TextButton("LOG IN", customSkin);
         signUpRedirectButton = new TextButton("Don't have an account? Create Account", skin, "label");
-        usernameField = new TextField("", skin);
+        usernameField = new TextField("", customSkin);
         usernameField.setMessageText("Username");
 
-        passwordField = new TextField("", skin);
+        passwordField = new TextField("", customSkin);
         passwordField.setMessageText("Password");
         passwordField.setPasswordMode(true);
         passwordField.setPasswordCharacter('*');
@@ -78,6 +75,7 @@ public class LoginScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
+        game.batch.setColor(1, 1, 1, 0.5f);
         game.batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         game.batch.end();
 
@@ -94,8 +92,8 @@ public class LoginScreen implements Screen {
         table.pad(50).padTop(150).top();
 
         loginContainer.add(loginLabel).padBottom(35).row();
-        loginContainer.add(usernameField).width(400).height(50).padBottom(20).row();
-        loginContainer.add(passwordField).width(400).height(50).padBottom(40).row();
+        loginContainer.add(usernameField).width(450).height(60).padBottom(20).row();
+        loginContainer.add(passwordField).width(450).height(60).padBottom(40).row();
         loginContainer.add(loginButton).width(250).padBottom(30).height(50).row();
         loginContainer.add(signUpRedirectButton).padBottom(35).row();
         loginContainer.add(serverMessage);
@@ -118,15 +116,18 @@ public class LoginScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 DBHelpers dbh = new DBHelpers(DBHelpers.getGlobalConnection());
-                String Username = usernameField.getText();;
+                String Username = usernameField.getText();
                 String Password = passwordField.getText();
                 User res = dbh.LoginUser(Username,Password);
                 if (res != null) {
                     GlobalEntities.setCurrentUser(res);
+                    serverMessage.setColor(Color.GREEN);
+                    serverMessage.setText("Logging in...");
                     System.out.println("LOGGING IN");
                     game.setScreen(new LandingScreen(game));
                     dispose();
                 }else{
+                    serverMessage.setColor(new Color(1f, 0.2f, 0.2f, 1f));
                     serverMessage.setText("Incorrect Credentials, Please Try Again");
                 }
                 // Handle Button Click
