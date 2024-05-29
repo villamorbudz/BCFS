@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -27,11 +28,13 @@ public class LoginScreen implements Screen {
     Label loginLabel;
     Label serverMessage;
     Table table;
+    Table loginContainer;
     TextButton loginButton;
     TextButton signUpRedirectButton;
     TextField usernameField;
     TextField passwordField;
     Texture background;
+    ShapeRenderer renderer;
 
     public LoginScreen(final BCFS gam) {
         game = gam;
@@ -45,7 +48,10 @@ public class LoginScreen implements Screen {
         // Load the skin
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
         background = new Texture(Gdx.files.internal("userAuthBG.jpg"));
+        renderer = new ShapeRenderer();
+
         table = new Table();
+        loginContainer = new Table(skin);
 
         loginLabel = new Label("LOG IN", skin, "title");
         serverMessage = new Label("Server Message", skin);
@@ -77,19 +83,21 @@ public class LoginScreen implements Screen {
         stage.draw();
     }
 
+
+
     @Override
     public void show() {
         table.setFillParent(true);
-        table.pad(50).padTop(25).top().center();
+        table.pad(50).padTop(150).top();
 
-        float buttonSpacing = 25f;
-        table.add(loginLabel).padBottom(50).row();
-        table.add(usernameField).width(600).height(75).padBottom(buttonSpacing).row();
-        table.add(passwordField).width(600).height(75).padBottom(buttonSpacing).row();
-        table.add(loginButton).width(400).padTop(25).height(50).row();
-        table.add(signUpRedirectButton).padTop(50).row();
-        table.add(serverMessage).padTop(50);
+        loginContainer.add(loginLabel).padBottom(35).row();
+        loginContainer.add(usernameField).width(400).height(50).padBottom(20).row();
+        loginContainer.add(passwordField).width(400).height(50).padBottom(40).row();
+        loginContainer.add(loginButton).width(250).padBottom(30).height(50).row();
+        loginContainer.add(signUpRedirectButton).padBottom(35).row();
+        loginContainer.add(serverMessage);
 
+        table.add(loginContainer).width(800);
         stage.addActor(table);
 
         signUpRedirectButton.addListener(new ClickListener() {
@@ -137,7 +145,6 @@ public class LoginScreen implements Screen {
     public void resume() {
 
     }
-
     @Override
     public void hide() {
 
