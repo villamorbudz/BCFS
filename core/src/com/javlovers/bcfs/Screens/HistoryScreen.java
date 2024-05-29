@@ -125,7 +125,7 @@ public class HistoryScreen implements Screen {
         // TODO: implement getter for games from the player
         String enemyName = "player2";
 
-        for (int i = 1; i <= 50; i++) {
+        for (int i = 1; i <= 5; i++) {
             TextButton gameButton = new TextButton("", skin, "toggle");
             Label gameButtonLabel = new Label(enemyName, skin);
             gameButton.setLabel(gameButtonLabel);
@@ -140,22 +140,21 @@ public class HistoryScreen implements Screen {
                 public void clicked(InputEvent event, float x, float y) {
                     if (next.isChecked()) {
                         // getGameInfo
-                        showFightReplay();
+                        gameInfoContainer.clear();
+                        getAttackCards();
                     } else {
-                        // clearInfoTable
+                        gameInfoContainer.clear();
                     }
                 }
             });
         }
 
-        getAttackCards();
-
         gameInfoContainer.add(gameInfoTable).row();
         table.add(gameInfoContainer).grow().top().row();
         sidebarTable.add(historyScrollPane).width(400).growY().top().left();
-        navigationContainer.add(prev).padRight(25);
-        navigationContainer.add(next).padLeft(25);
-        gameInfoContainer.add(navigationContainer).colspan(3).padTop(50).growX().center();
+//        navigationContainer.add(prev).padRight(25);
+//        navigationContainer.add(next).padLeft(25);
+//        gameInfoContainer.add(navigationContainer).colspan(3).padTop(50).growX().center();
         stage.addActor(table);
         table.setDebug(true);
 

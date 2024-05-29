@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -71,6 +72,7 @@ public class MakeCockScreen implements Screen {
         attackTraversalButtonBar = new Table();
 
         cockNameTextField = new TextField("", customSkin);
+        cockNameTextField.setAlignment(Align.center);
         attacksText = new Label("ATTACKS", skin, "title");
 
         nameText = new Label("NAME: ", skin,"title");
@@ -162,8 +164,8 @@ public class MakeCockScreen implements Screen {
             ind++;
         }
 
-        subTable.add(saveButton).width(170).height(60).padRight(15).left();
-        subTable.add(testButton).width(170).height(60);
+        subTable.add(saveButton).width(350).height(60).padRight(15).left();
+//        subTable.add(testButton).width(170).height(60);
         sidebarTable.add(subTable).padTop(50).colspan(2).left();
 
         // Button Click Handling

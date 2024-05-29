@@ -45,7 +45,7 @@ public class SignUpScreen implements Screen {
         // Load the skin
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
         customSkin = new Skin(Gdx.files.internal("custom_ui/custom_ui.json"));
-        background = new Texture(Gdx.files.internal("userAuthBG.jpg"));
+        background = new Texture(Gdx.files.internal("farm.png"));
         table = new Table();
 
         signUpLabel = new Label("CREATE ACCOUNT", customSkin);
@@ -55,7 +55,7 @@ public class SignUpScreen implements Screen {
         loginRedirectButton = new TextButton("Already have an account? Log in", skin, "label");
         usernameField = new TextField("", customSkin);
         usernameField.setMessageText("Username");
-        displayNameField = new TextField("", skin);
+        displayNameField = new TextField("", customSkin);
         displayNameField.setMessageText("Display Name");
 
         passwordField = new TextField("", customSkin);
@@ -86,10 +86,15 @@ public class SignUpScreen implements Screen {
         table.pad(50).padTop(25).top().center();
 
         float buttonSpacing = 25f;
-        table.add(signUpLabel).padBottom(50).row();
-        table.add(displayNameField).width(600).height(75).padBottom(buttonSpacing).row();
+        Texture appLogo = new Texture(Gdx.files.internal("logo.png"));
+        Image logo = new Image(appLogo);
+        logo.setSize(600, 200);
+        logo.setPosition(341 , 500);
+        table.addActor(logo);
+        table.add(signUpLabel).padTop(300).padBottom(35).row();
+        table.add(displayNameField).width(450).height(60).padBottom(buttonSpacing).row();
         table.add(usernameField).width(450).height(60).padBottom(buttonSpacing).row();
-        table.add(passwordField).width(450).height(60).padBottom(buttonSpacing).row();
+        table.add(passwordField).width(450).height(40).padBottom(buttonSpacing).row();
         table.add(signUpButton).width(400).padTop(25).height(50).row();
         table.add(loginRedirectButton).padTop(50).row();
         table.add(serverMessage).padTop(50);
@@ -113,6 +118,17 @@ public class SignUpScreen implements Screen {
                     return;
                 }
                 System.out.println("SIGN UP");
+                game.setScreen(new LoginScreen(game));
+                dispose();
+            }
+        });
+
+        loginRedirectButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
+                // Handle Button Click
+                System.out.println("LOGIN");
                 game.setScreen(new LoginScreen(game));
                 dispose();
             }

@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.javlovers.bcfs.BCFS;
@@ -23,13 +25,16 @@ public class SettingsScreen implements Screen {
     Skin customSkin;
     Table table;
     Label accountLabel;
+    Label displayNameLabel;
     Label usernameLabel;
     Label passwordLabel;
+    TextField displayNameField;
     TextField usernameField;
     TextField passwordField;
     TextButton backButton;
     TextButton saveButton;
     TextButton logOutButton;
+    Texture backgroundTexture;
     public SettingsScreen(final BCFS gam) {
         game = gam;
 
@@ -39,19 +44,27 @@ public class SettingsScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage); // Set the stage as the input processor
 
+        backgroundTexture = new Texture(Gdx.files.internal("farm.png"));
+
         // Load the skin
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
         customSkin = new Skin(Gdx.files.internal("custom_ui/custom_ui.json"));
         table = new Table();
 
         accountLabel = new Label("ACCOUNT SETTINGS", skin, "title");
+        displayNameLabel = new Label("EDIT DISPLAY NAME", skin);
         usernameLabel = new Label("EDIT USERNAME", skin);
         passwordLabel = new Label("CHANGE PASSWORD", skin);
 
+        displayNameField = new TextField("", customSkin);
         usernameField = new TextField("", customSkin);
         passwordField = new TextField("", customSkin);
         passwordField.setPasswordMode(true);
         passwordField.setPasswordCharacter('*');
+
+        displayNameField.setAlignment(Align.center);
+        usernameField.setAlignment(Align.center);
+        passwordField.setAlignment(Align.center);
 
         backButton = new TextButton("BACK", customSkin);
         saveButton = new TextButton("SAVE", customSkin);
@@ -66,6 +79,7 @@ public class SettingsScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
+        game.batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         game.batch.end();
 
         // Update and draw the stage
@@ -80,15 +94,17 @@ public class SettingsScreen implements Screen {
         table.top().left();
 
 
-        table.add(backButton).width(200).height(40).padBottom(50).left();
+        table.add(backButton).width(200).height(35).padBottom(35).left();
         table.row();
 
-        table.add(accountLabel).padBottom(35).left().row();
+        table.add(accountLabel).padBottom(40).left().row();
+        table.add(displayNameLabel).padBottom(10).left().row();
+        table.add(displayNameField).width(350).height(45).padBottom(25).left().row();
         table.add(usernameLabel).padBottom(10).left().row();
-        table.add(usernameField).width(350).height(45).padBottom(40).left().row();
+        table.add(usernameField).width(350).height(45).padBottom(25).left().row();
         table.add(passwordLabel).padBottom(10).left().row();
-        table.add(passwordField).width(350).height(45).padBottom(40).left().row();
-        table.add(saveButton).padBottom(150).width(350).height(65).left().row();
+        table.add(passwordField).width(350).height(45).padBottom(45).left().row();
+        table.add(saveButton).padBottom(60).width(350).height(65).left().row();
         table.add(logOutButton).width(350).height(60).left().row();
         stage.addActor(table);
 

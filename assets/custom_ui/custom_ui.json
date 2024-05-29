@@ -20,6 +20,12 @@
 		}
 	},
 	"com.badlogic.gdx.graphics.Color": {
+		"gray": {
+			"r": 0.25,
+			"g": 0.25,
+			"b": 0.25,
+			"a": 1
+		},
 		"RGBA_107_80_82_255": {
 			"r": 0.41960785,
 			"g": 0.3137255,
@@ -76,7 +82,7 @@
 	"com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
 		"default": {
 			"font": "pixeloid_sans",
-			"fontColor": "RGBA_107_80_82_255",
+			"fontColor": "gray",
 			"background": "field_text_field"
 		}
 	},

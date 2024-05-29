@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.javlovers.bcfs.BCFS;
@@ -47,7 +48,7 @@ public class LoginScreen implements Screen {
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
         customSkin = new Skin(Gdx.files.internal("custom_ui/custom_ui.json"));
 
-        background = new Texture(Gdx.files.internal("userAuthBG.jpg"));
+        background = new Texture(Gdx.files.internal("farm.png"));
         renderer = new ShapeRenderer();
 
         table = new Table();
@@ -91,7 +92,16 @@ public class LoginScreen implements Screen {
         table.setFillParent(true);
         table.pad(50).padTop(150).top();
 
-        loginContainer.add(loginLabel).padBottom(35).row();
+        Texture appLogo = new Texture(Gdx.files.internal("logo.png"));
+        Image logo = new Image(appLogo);
+        logo.setSize(600, 200);
+        logo.setPosition(101 , 400);
+        loginContainer.addActor(logo);
+        loginContainer.add(loginLabel).padTop(100).padBottom(35).row();
+
+        usernameField.setAlignment(Align.center);
+        passwordField.setAlignment(Align.center);
+
         loginContainer.add(usernameField).width(450).height(60).padBottom(20).row();
         loginContainer.add(passwordField).width(450).height(60).padBottom(40).row();
         loginContainer.add(loginButton).width(250).padBottom(30).height(50).row();
@@ -116,8 +126,8 @@ public class LoginScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 DBHelpers dbh = new DBHelpers(DBHelpers.getGlobalConnection());
-                String Username = usernameField.getText();
-                String Password = passwordField.getText();
+                String Username = /*usernameField.getText()*/"Hatiti";
+                String Password = /*passwordField.getText()*/"123";
                 User res = dbh.LoginUser(Username,Password);
                 if (res != null) {
                     GlobalEntities.setCurrentUser(res);

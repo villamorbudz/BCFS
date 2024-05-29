@@ -5,14 +5,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.javlovers.bcfs.BCFS;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import java.util.ArrayList;
@@ -64,8 +61,6 @@ public class LandingScreen implements Screen {
     public void show() {
         buttons = new ArrayList<>();
 
-        Label gameTitle = new Label("BIG COCK FIGHTING SIMULATOR", customSkin);
-
         // Create the TextButtons
         TextButton makeButton = new TextButton("COCK UP", customSkin);
         TextButton challengeButton = new TextButton("FIGHT", customSkin);
@@ -85,15 +80,20 @@ public class LandingScreen implements Screen {
 
         table.center();
 
-        table.add(gameTitle).padBottom(50);
-        table.row();
+        Texture appLogo = new Texture(Gdx.files.internal("logo.png"));
+        Image logo = new Image(appLogo);
+        logo.setSize(400, 125);
+        logo.setPosition(450 , 575);
+        table.addActor(logo);
+
 
         // Add buttons to the table with spacing
         float buttonSpacing = 20f;
-        for (TextButton button : buttons) {
-            table.add(button).width(500).height(75).padBottom(buttonSpacing);
-            table.row(); // Move to the next row after each button
-        }
+        table.add(challengeButton).width(500).height(75).padTop(100).padBottom(buttonSpacing).row();
+        table.add(makeButton).width(500).height(75).padBottom(buttonSpacing).row();
+        table.add(historyButton).width(500).height(75).padBottom(buttonSpacing).row();
+        table.add(settingsButton).width(500).height(75).padBottom(buttonSpacing).row();
+        table.add(exitButton).width(500).height(75).padBottom(buttonSpacing).row();
 
         // Add the table to the stage
         stage.addActor(table);
