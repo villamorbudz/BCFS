@@ -11,6 +11,9 @@ import com.javlovers.bcfs.BCFS;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.javlovers.bcfs.Screens.BackEnd.DB.LocalHostConnection;
+import com.javlovers.bcfs.Screens.BackEnd.Globals.DBHelpers;
+
 import java.util.ArrayList;
 
 public class SettingsScreen implements Screen {
@@ -96,6 +99,16 @@ public class SettingsScreen implements Screen {
                 // Handle Button Click
                 System.out.println("BACK");
                 game.setScreen(new LandingScreen(game));
+                String username = usernameField.getText().toString();
+                String password = passwordField.getText().toString();
+
+
+                DBHelpers dbh = new DBHelpers(new LocalHostConnection());
+
+//                TODO get displayname, and userID
+//                dbh.updateDetails();
+
+
                 dispose();
             }
         });
