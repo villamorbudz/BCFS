@@ -27,6 +27,8 @@ public class HistoryScreen implements Screen {
     Table navigationContainer;
     Table userAttackCards;
     Table enemyAttackCards;
+    Table fightStatsTable;
+    Table attacksSequenceTable;
     ScrollPane historyScrollPane;
     Label historyLabel;
     Label userLabel;
@@ -34,8 +36,8 @@ public class HistoryScreen implements Screen {
     TextButton prev;
     TextButton next;
     TextButton backButton;
+    TextArea attackLogs;
     ButtonGroup<TextButton> gamesButtonGroup;
-
     int page;
 
     public HistoryScreen(final BCFS gam) {
@@ -56,11 +58,14 @@ public class HistoryScreen implements Screen {
         gameInfoContainer = new Table();
         gameInfoTable = new Table();
         navigationContainer = new Table();
+        fightStatsTable = new Table();
+        attacksSequenceTable = new Table();
 
         historyLabel = new Label("HISTORY", skin, "title");
         userLabel = new Label("", skin);
         enemyLabel = new Label("", skin);
 
+        attackLogs = new TextArea("", skin);
         backButton = new TextButton("BACK", skin);
         prev = new TextButton("<", skin);
         next = new TextButton(">",skin);
@@ -132,12 +137,12 @@ public class HistoryScreen implements Screen {
 
         getAttackCards();
 
-        gameInfoContainer.add(gameInfoTable);
+        gameInfoContainer.add(gameInfoTable).row();
         table.add(gameInfoContainer).grow().top().row();
         sidebarTable.add(historyScrollPane).width(400).growY().top().left();
-        navigationContainer.add(prev);
-        navigationContainer.add(next);
-        table.add(navigationContainer);
+        navigationContainer.add(prev).padRight(25);
+        navigationContainer.add(next).padLeft(25);
+        gameInfoContainer.add(navigationContainer).colspan(3).padTop(50).growX().center();
         stage.addActor(table);
         table.setDebug(true);
 
@@ -155,7 +160,7 @@ public class HistoryScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Handle Button Click
-
+                navigate(1);
             }
         });
 
@@ -163,17 +168,30 @@ public class HistoryScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Handle Button Click
+                navigate(2);
             }
         });
     }
 
+    private void navigate(int i) {
+        switch(i) {
+            case 1:
+                gameInfoTable.clear();
+                getAttackCards();
+                break;
+            case 2:
+                gameInfoTable.clear();
+                getFightReplay();
+                break;
+        }
+    }
 
     private void getAttackCards() {
         // fetch from DB
         userLabel.setText("cockName (You)");
         enemyLabel.setText("cockName (enemy)");
 
-        gameInfoTable.add(userLabel).growX().padLeft(15).left().row();
+        gameInfoTable.add(userLabel).growX().padLeft(15).colspan(3).left().row();
         userAttackCards = new Table();
         for(int i = 0; i < 4; i++) {
             TextButton attackCard = new TextButton("attackName" + "\n\n\n" +
@@ -182,10 +200,10 @@ public class HistoryScreen implements Screen {
                     "Speed:   " + "param3" + "\n", skin, "display");
             userAttackCards.add(attackCard).pad(15);
         }
-        gameInfoTable.add(userAttackCards).row();
+        gameInfoTable.add(userAttackCards).colspan(3).row();
         userAttackCards.padBottom(50);
 
-        gameInfoTable.add(enemyLabel).growX().padLeft(15).right().row();
+        gameInfoTable.add(enemyLabel).colspan(3).growX().padLeft(15).right().row();
         enemyAttackCards = new Table();
         for(int i = 0; i < 4; i++) {
             TextButton attackCard = new TextButton("attackName" + "\n\n\n" +
@@ -194,16 +212,22 @@ public class HistoryScreen implements Screen {
                     "Speed:   " + "param3" + "\n", skin, "display");
             enemyAttackCards.add(attackCard).pad(15);
         }
-        gameInfoTable.add(enemyAttackCards).padBottom(25).row();
-    }
-    private void getFightStats() {
-        gameInfoTable.add(userLabel).expandX().fill();
-        gameInfoTable.add(enemyLabel).expandX().fill();
+        gameInfoTable.add(enemyAttackCards).colspan(3).padBottom(25).row();
 
-        gameInfoContainer.add(gameInfoTable);
-    }
+        Label param1 = new Label("Param1: " + "9999", skin);
+        Label param2 = new Label("Param2: " + "9999", skin);
+        Label param3 = new Label("Param3: " + "9999", skin);
 
+        gameInfoTable.add(param1);
+        gameInfoTable.add(param2);
+        gameInfoTable.add(param3);
+
+    }
     private void getFightReplay() {
+        attacksSequenceTable.add(attackLogs).width(800).height(300).bottom();
+        attackLogs.setDisabled(true);
+        gameInfoTable.add(attacksSequenceTable).center();
+        attacksSequenceTable.setDebug(true);
     }
 
     @Override

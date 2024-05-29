@@ -18,7 +18,15 @@ public class SettingsScreen implements Screen {
     OrthographicCamera camera;
     Stage stage;
     Skin skin;
-
+    Table table;
+    Label accountLabel;
+    Label usernameLabel;
+    Label passwordLabel;
+    TextField usernameField;
+    TextField passwordField;
+    TextButton backButton;
+    TextButton saveButton;
+    TextButton logOutButton;
     public SettingsScreen(final BCFS gam) {
         game = gam;
 
@@ -30,6 +38,21 @@ public class SettingsScreen implements Screen {
 
         // Load the skin
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
+
+        table = new Table();
+
+        accountLabel = new Label("ACCOUNT SETTINGS", skin, "title");
+        usernameLabel = new Label("EDIT USERNAME", skin);
+        passwordLabel = new Label("CHANGE PASSWORD", skin);
+
+        usernameField = new TextField("", skin);
+        passwordField = new TextField("", skin);
+        passwordField.setPasswordMode(true);
+        passwordField.setPasswordCharacter('*');
+
+        backButton = new TextButton("BACK", skin);
+        saveButton = new TextButton("SAVE", skin);
+        logOutButton = new TextButton("LOG OUT", skin);
     }
 
     @Override
@@ -49,27 +72,21 @@ public class SettingsScreen implements Screen {
 
     @Override
     public void show() {
-        Table table = new Table();
         table.setFillParent(true);
         table.pad(50).padTop(25).top().left();
+        table.top().left();
 
-        ScrollPane historyScrollPane;
-        Table sidebarTable;
-        Table gameHistoryTable;
 
-        // Creating
-        TextButton backButton = new TextButton("BACK", skin);
+        table.add(backButton).width(200).height(40).padBottom(50).left();
+        table.row();
 
-        // Adding
-        sidebarTable = new Table();
-        sidebarTable.top().left();
-        table.add(sidebarTable);
-
-        float buttonSpacing = 25f;
-
-        sidebarTable.add(backButton).width(200).height(45).padLeft(15).padBottom(buttonSpacing).left();
-        sidebarTable.row();
-
+        table.add(accountLabel).padBottom(35).left().row();
+        table.add(usernameLabel).padBottom(10).left().row();
+        table.add(usernameField).width(350).height(45).padBottom(40).left().row();
+        table.add(passwordLabel).padBottom(10).left().row();
+        table.add(passwordField).width(350).height(45).padBottom(40).left().row();
+        table.add(saveButton).padBottom(150).width(350).height(65).left().row();
+        table.add(logOutButton).width(350).height(60).left().row();
         stage.addActor(table);
 
         // CLICK HANDLING

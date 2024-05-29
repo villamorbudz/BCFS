@@ -18,6 +18,7 @@ public class SignUpScreen implements Screen {
     OrthographicCamera camera;
     Stage stage;
     Skin skin;
+    Skin buttonSkin;
     Label signUpLabel;
     Label serverMessage;
     Table table;
@@ -39,13 +40,14 @@ public class SignUpScreen implements Screen {
 
         // Load the skin
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
+        buttonSkin = new Skin(Gdx.files.internal("custom_ui/buttons.json"));
         background = new Texture(Gdx.files.internal("userAuthBG.jpg"));
         table = new Table();
 
         signUpLabel = new Label("CREATE ACCOUNT", skin, "title");
-        serverMessage = new Label("Server Message", skin);
+        serverMessage = new Label("", skin);
 
-        signUpButton = new TextButton("CREATE ACCOUNT", skin);
+        signUpButton = new TextButton("CREATE ACCOUNT", buttonSkin);
         loginRedirectButton = new TextButton("Already have an account? Log in", skin, "label");
         usernameField = new TextField("", skin);
         usernameField.setMessageText("Username");
