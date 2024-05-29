@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.javlovers.bcfs.CockfightGame;
 
 import static com.badlogic.gdx.utils.Align.center;
-import static com.javlovers.bcfs.CockfightGame.*;
 
 public class HistoryScreen implements Screen {
     final BCFS game;
@@ -41,6 +40,8 @@ public class HistoryScreen implements Screen {
     TextArea attackLogs;
     ButtonGroup<TextButton> gamesButtonGroup;
     int page;
+
+    CockfightGame cockfightGame; // Instance of CockfightGame
 
     public HistoryScreen(final BCFS gam) {
         game = gam;
@@ -70,12 +71,16 @@ public class HistoryScreen implements Screen {
         attackLogs = new TextArea("", skin);
         backButton = new TextButton("BACK", skin);
         prev = new TextButton("<", skin);
-        next = new TextButton(">",skin);
+        next = new TextButton(">", skin);
         historyScrollPane = new ScrollPane(gameHistoryTable, skin);
 
         gamesButtonGroup = new ButtonGroup<>();
 
         page = 1;
+
+        // Initialize the CockfightGame
+        cockfightGame = new CockfightGame();
+        cockfightGame.create();
     }
 
     @Override
@@ -91,6 +96,11 @@ public class HistoryScreen implements Screen {
         // Update and draw the stage
         stage.act(delta);
         stage.draw();
+
+        // Render the CockfightGame if it's active
+        if (cockfightGame.getScreen() != null) {
+            cockfightGame.render();
+        }
     }
 
     @Override
@@ -125,11 +135,12 @@ public class HistoryScreen implements Screen {
             gameHistoryTable.add(gameButton).width(350).height(60).padBottom(buttonSpacing).center();
             gameHistoryTable.row();
 
-            gameButton.addListener(new ClickListener() {
+            next.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (gameButton.isChecked()) {
+                    if (next.isChecked()) {
                         // getGameInfo
+                        showFightReplay();
                     } else {
                         // clearInfoTable
                     }
@@ -223,18 +234,23 @@ public class HistoryScreen implements Screen {
         gameInfoTable.add(param1);
         gameInfoTable.add(param2);
         gameInfoTable.add(param3);
-
     }
 
-
     private void getFightReplay() {
-        CockfightGame cockfightGame = new CockfightGame();
-        cockfightGame.create();
+        /*CockfightGame cockfightGame = new CockfightGame();
+        cockfightGame.startGame();*/
 
         attacksSequenceTable.add(attackLogs).width(800).height(300).bottom();
         attackLogs.setDisabled(true);
         gameInfoTable.add(attacksSequenceTable).center();
         attacksSequenceTable.setDebug(true);
+    }
+
+    private void showFightReplay() {
+        // Logic to display the CockfightGame within the history screen
+        // This might involve setting the screen to the PlayScreen or rendering the game within a specific area
+        cockfightGame.startGame();
+        game.setScreen(cockfightGame.getScreen());
     }
 
     @Override
@@ -255,5 +271,6 @@ public class HistoryScreen implements Screen {
     public void dispose() {
         stage.dispose();
         skin.dispose();
+        cockfightGame.dispose(); // Dispose of the CockfightGame resources
     }
 }

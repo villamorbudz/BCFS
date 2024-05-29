@@ -14,18 +14,18 @@ public class CockfightGame extends Game {
 	public static final float PPM = 100;
 	public static final float worldWidth = V_WIDTH / PPM;
 	public static final float worldHeight = V_HEIGHT / PPM;
-	private final float mapWidth = 936 / CockfightGame.PPM;
-	private static final float WORLD_GRAVITY = -28f;
+	public static final float mapWidth = 936 / CockfightGame.PPM;
+	public static final float WORLD_GRAVITY = -28f;
 
 	public SpriteBatch spriteBatch;
 
 	@Override
 	public void create () {
-		spriteBatch = new SpriteBatch();
-		startGame();
+		// startGame();
 	}
 
-	private void startGame() {
+	public void startGame() {
+		spriteBatch = new SpriteBatch();
 		World world = new World(new Vector2(0, WORLD_GRAVITY), true);
 
 		// create the chickens
