@@ -16,7 +16,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.javlovers.bcfs.Others.GlobalEntities;
 import com.javlovers.bcfs.Screens.BackEnd.Globals.DBHelpers;
+import com.javlovers.bcfs.Screens.BackEnd.Main.Cock;
 import com.javlovers.bcfs.Screens.BackEnd.Main.User;
+
+import java.net.Inet4Address;
+import java.util.HashMap;
 
 public class LoginScreen implements Screen {
     final BCFS game;
@@ -131,6 +135,8 @@ public class LoginScreen implements Screen {
                 User res = dbh.LoginUser(Username,Password);
                 if (res != null) {
                     GlobalEntities.setCurrentUser(res);
+                    HashMap<Integer, Cock> Tmp = dbh.getAllCurrCockData();
+                    GlobalEntities.CurrentCock = Tmp.get(res.getUserID());
                     serverMessage.setColor(Color.GREEN);
                     serverMessage.setText("Logging in...");
                     System.out.println("LOGGING IN");

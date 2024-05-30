@@ -12,6 +12,8 @@ import com.javlovers.bcfs.BCFS;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.javlovers.bcfs.Others.GlobalEntities;
+
 import java.util.ArrayList;
 
 public class LandingScreen implements Screen {
@@ -73,6 +75,10 @@ public class LandingScreen implements Screen {
         buttons.add(historyButton);
         buttons.add(settingsButton);
         buttons.add(exitButton);
+
+        if(GlobalEntities.CurrentCock == null){
+            challengeButton.setDisabled(true);
+        }
 
         // Create a table and add the buttons
         Table table = new Table();
