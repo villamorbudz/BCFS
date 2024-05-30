@@ -13,6 +13,8 @@ import com.javlovers.bcfs.BCFS;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.javlovers.bcfs.Others.GlobalEntities;
+import com.javlovers.bcfs.Screens.BackEnd.Globals.DBHelpers;
 import jdk.internal.net.http.common.Log;
 
 import java.util.ArrayList;
@@ -124,6 +126,20 @@ public class SettingsScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 // Handle Button Click
                 System.out.println("LOGGING OUT...");
+                game.setScreen(new LoginScreen(game));
+                dispose();
+            }
+        });
+        saveButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Handle Button Click
+                DBHelpers dbh = new DBHelpers(DBHelpers.getGlobalConnection());
+                String DN = displayNameField.getText();
+                String UName = usernameField.getText();
+                String Password = passwordField.getText();
+                dbh.updateDetails(GlobalEntities.currentUser.getUserID(),DN,UName,Password);
+                System.out.println("Whoops");
                 game.setScreen(new LoginScreen(game));
                 dispose();
             }
