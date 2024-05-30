@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
@@ -46,7 +47,7 @@ public class MakeCockScreen implements Screen {
     TextButton saveButton;
     TextButton testButton;
 
-    //
+    Texture backgroundTexture;
     Attack SelectedAttack;
     Cock tempCock;
 
@@ -70,6 +71,7 @@ public class MakeCockScreen implements Screen {
         subTable = new Table();
         attackListTable = new Table();
         attackTraversalButtonBar = new Table();
+        backgroundTexture = new Texture(Gdx.files.internal("farm.png"));
 
         cockNameTextField = new TextField("", customSkin);
         cockNameTextField.setAlignment(Align.center);
@@ -116,6 +118,7 @@ public class MakeCockScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
+        game.batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         game.batch.end();
 
         // Update and draw the stage

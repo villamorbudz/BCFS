@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -50,6 +51,7 @@ public class HistoryScreen implements Screen {
     TextButton backButton;
     TextArea attackLogs;
     ButtonGroup<TextButton> gamesButtonGroup;
+    Texture backgroundTexture;
     int page;
 
     CockfightGame cockfightGame; // Instance of CockfightGame
@@ -65,6 +67,7 @@ public class HistoryScreen implements Screen {
 
         // Load the skin
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
+        backgroundTexture = new Texture(Gdx.files.internal("farm.png"));
 
         table = new Table();
         sidebarTable = new Table();
@@ -102,6 +105,7 @@ public class HistoryScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
+        game.batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         game.batch.end();
 
         // Update and draw the stage
@@ -184,7 +188,6 @@ public class HistoryScreen implements Screen {
 //        navigationContainer.add(next).padLeft(25);
 //        gameInfoContainer.add(navigationContainer).colspan(3).padTop(50).growX().center();
         stage.addActor(table);
-        table.setDebug(true);
 
         backButton.addListener(new ClickListener() {
             @Override
@@ -294,7 +297,6 @@ public class HistoryScreen implements Screen {
         attacksSequenceTable.add(attackLogs).width(800).height(300).bottom();
         attackLogs.setDisabled(true);
         gameInfoTable.add(attacksSequenceTable).center();
-        attacksSequenceTable.setDebug(true);
     }
 
     private void showFightReplay() {
