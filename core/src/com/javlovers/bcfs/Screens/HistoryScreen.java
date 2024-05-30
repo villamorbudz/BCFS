@@ -148,12 +148,14 @@ public class HistoryScreen implements Screen {
             gameButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    gameInfoContainer.clear();
                     if (gameButton.isChecked()) {
                         // getGameInfo
                         getAttackCards(History.get(MatchID));
                     } else {
                         // clearInfoTable
                     }
+
                 }
             });
         }

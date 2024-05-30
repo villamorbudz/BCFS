@@ -199,7 +199,7 @@ public class DBHelpers {
                     Attack tempAtk = AttackHelper.cloneAttack(allAttack.get(AIDs));
                     cock.addAttack(tempAtk);
                 }
-                cockData.put(rs.getInt("UserID"),cock);
+                cockData.put(rs.getInt("CockID"),cock);
             }
             System.out.println("Cocks Fetched Successfully");
         } catch (SQLException e) {

@@ -126,8 +126,8 @@ public class LoginScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 DBHelpers dbh = new DBHelpers(DBHelpers.getGlobalConnection());
-                String Username = /*usernameField.getText()*/"Hatiti";
-                String Password = /*passwordField.getText()*/"123";
+                String Username = usernameField.getText();
+                String Password = passwordField.getText();
                 User res = dbh.LoginUser(Username,Password);
                 if (res != null) {
                     GlobalEntities.setCurrentUser(res);
