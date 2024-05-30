@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.javlovers.bcfs.BCFS;
@@ -18,10 +17,7 @@ import com.javlovers.bcfs.Others.GlobalEntities;
 import com.javlovers.bcfs.Screens.BackEnd.Globals.DBHelpers;
 import com.javlovers.bcfs.Screens.BackEnd.Main.Attack;
 import com.javlovers.bcfs.Screens.BackEnd.Main.Cock;
-import com.javlovers.bcfs.Screens.BackEnd.Main.MatchResult;
-import com.javlovers.bcfs.Screens.BackEnd.Main.User;
 
-import java.security.AllPermission;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -48,7 +44,7 @@ public class HistoryScreen implements Screen {
     Label userLabel;
     Label enemyLabel;
     TextButton prev;
-    TextButton next;
+    TextButton replay;
     TextButton backButton;
     TextArea attackLogs;
     ButtonGroup<TextButton> gamesButtonGroup;
@@ -89,7 +85,7 @@ public class HistoryScreen implements Screen {
         prev = new TextButton("<", skin);
 
 
-        next = new TextButton("REPLAY", customSkin);
+        replay = new TextButton("REPLAY", customSkin);
         historyScrollPane = new ScrollPane(gameHistoryTable, skin);
 
         gamesButtonGroup = new ButtonGroup<>();
@@ -177,6 +173,8 @@ public class HistoryScreen implements Screen {
                         // clearInfoTable
                         gameInfoTable.clear();
                     }
+                    navigationContainer.add(replay).width(200).height(45).padLeft(25);
+
 
                 }
             });
@@ -189,7 +187,7 @@ public class HistoryScreen implements Screen {
         table.add(gameInfoContainer).grow().top().row();
         sidebarTable.add(historyScrollPane).width(400).growY().top().left();
 //        navigationContainer.add(prev).padRight(25);
-        navigationContainer.add(next).width(200).height(45).padLeft(25);
+//        navigationContainer.add(replay).width(200).height(45).padLeft(25);
         gameInfoContainer.add(navigationContainer).colspan(3).padTop(50).growX().center();
         stage.addActor(table);
         stage.addActor(table);
@@ -212,7 +210,7 @@ public class HistoryScreen implements Screen {
             }
         });
 
-        next.addListener(new ClickListener() {
+        replay.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Handle Button Click
@@ -288,6 +286,7 @@ public class HistoryScreen implements Screen {
         }
         gameInfoTable.add(enemyAttackCards).colspan(3).padBottom(25).row();
         int WinnerID = MatchResult.get(2);
+
         //Label param1 = new Label("Winner: " + ((WinnerID != 0) ? AllC.get(WinnerID).getName() : "None"), skin);
         //Label param2 = new Label("Param2: " + "9999", skin);
         //Label param3 = new Label("Param3: " + "9999", skin);
@@ -309,7 +308,7 @@ public class HistoryScreen implements Screen {
     private void showFightReplay() {
         // Logic to display the CockfightGame within the history screen
         // This might involve setting the screen to the PlayScreen or rendering the game within a specific area
-        cockfightGame.startGame(this,cockfightGame,game);
+        cockfightGame.startGame(this,cockfightGame,game,false);
         game.setScreen(cockfightGame.getScreen());
     }
 

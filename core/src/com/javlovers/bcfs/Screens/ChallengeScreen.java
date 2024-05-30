@@ -19,8 +19,10 @@ import com.javlovers.bcfs.Screens.BackEnd.Globals.DBHelpers;
 import com.javlovers.bcfs.Screens.BackEnd.Globals.Helpers;
 import com.javlovers.bcfs.Screens.BackEnd.Main.Attack;
 import com.javlovers.bcfs.Screens.BackEnd.Main.Cock;
+import com.javlovers.bcfs.Screens.BackEnd.Main.MatchFacade;
 import com.javlovers.bcfs.Screens.BackEnd.Main.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -194,10 +196,12 @@ public class ChallengeScreen implements Screen {
 
                             int winner = Helpers.Fight(GlobalEntities.CurrentCock,allTempC.get(UserID));
 
-                            dbh.createMatch(GlobalEntities.CurrentCock, allTempC.get(UserID));
+                            dbh.createMatch(GlobalEntities.CurrentCock, allTempC.get(UserID),winner);
+//                            ArrayList<MatchFacade> mfs = dbh.getAllUnverifiedMatches();
+
 
                             //dbh.setWinner(matchID,winner);
-                            playMatch();
+                            playMatch(true);
                         }
                     }
                 });
@@ -207,11 +211,11 @@ public class ChallengeScreen implements Screen {
         }
     }
 
-    private void playMatch() {
+    private void playMatch(boolean playfirst) {
         CockfightGame cockfightGame = new CockfightGame();
 
 //        gameInfoTable.add(attacksSequenceTable).center();
-        cockfightGame.startGame(this,cockfightGame,game);
+        cockfightGame.startGame(this,cockfightGame,game,playfirst);
         game.setScreen(cockfightGame.getScreen());
     }
 

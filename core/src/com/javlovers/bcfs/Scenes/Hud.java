@@ -37,7 +37,7 @@ public class Hud implements Disposable {
     TextButton prevScreenBtn;
 
 
-    public Hud(SpriteBatch spriteBatch, Screen prevScreen, CockfightGame game, BCFS bcfs) {
+    public Hud(SpriteBatch spriteBatch, Screen prevScreen, CockfightGame game, BCFS bcfs, boolean firstplay) {
         worldTimer = 300;
         timeCount = 0;
         score = 0;
@@ -60,12 +60,12 @@ public class Hud implements Disposable {
         prevScreenBtn = new TextButton("Back", customSkin);
 
 
-        table.add(marioLabel).expandX().padTop(10);
-        table.add(worldLabel).expandX().padTop(10);
-        table.add(timeLabel).expandX().padTop(10);
-        table.row();
-        table.add(scoreLabel).expandX();
-        table.add(levelLabel).expandX();
+//        table.add(marioLabel).expandX().padTop(10);
+//        table.add(worldLabel).expandX().padTop(10);
+//        table.add(timeLabel).expandX().padTop(10);
+//        table.row();
+//        table.add(scoreLabel).expandX();
+//        table.add(levelLabel).expandX();
 //        table.add(prevScreen).expandX();
 //        table.row();
         prevScreenBtn.setHeight(30);
@@ -74,7 +74,7 @@ public class Hud implements Disposable {
         prevScreenBtn.setY(20);
 
         stage.addActor(table);
-        stage.addActor(prevScreenBtn);
+        if(!firstplay)stage.addActor(prevScreenBtn);
         System.out.println(prevScreenBtn);
 
         prevScreenBtn.addListener(new ClickListener() {
@@ -106,6 +106,8 @@ public class Hud implements Disposable {
 
         Gdx.input.setInputProcessor(stage);
     }
+
+
 
 
     @Override

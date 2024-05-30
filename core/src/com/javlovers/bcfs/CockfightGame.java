@@ -25,7 +25,7 @@ public class CockfightGame extends Game {
 		// startGame();
 	}
 
-	public void startGame(Screen prevScreen, CockfightGame cockFight, BCFS bcfs) {
+	public void startGame(Screen prevScreen, CockfightGame cockFight, BCFS bcfs,boolean firstplay) {
 		spriteBatch = new SpriteBatch();
 		World world = new World(new Vector2(0, WORLD_GRAVITY), true);
 
@@ -35,7 +35,6 @@ public class CockfightGame extends Game {
 		Chicken chicken1 = new Chicken.ChickenBuilder(world, chicken1Region)
 				.setPosX((2 * mapWidth - worldWidth) / 4f)
 				.setPosY(64 / CockfightGame.PPM)
-				.setDamage(20)
 				.build();
 
 		TextureAtlas chicken2Atlas = new TextureAtlas("chicken_pack/white_chicken.txt");
@@ -46,7 +45,7 @@ public class CockfightGame extends Game {
 				.setIsFaceRight(false)
 				.build();
 
-		PlayScreen playScreen = new PlayScreen(this, world, chicken1, chicken2,prevScreen,cockFight,bcfs);
+		PlayScreen playScreen = new PlayScreen(this, world, chicken1, chicken2,prevScreen,cockFight,bcfs,firstplay);
 		setScreen(playScreen);
 	}
 

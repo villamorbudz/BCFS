@@ -60,7 +60,7 @@ public class PlayScreen implements Screen {
 
 
     /* CONSTRUCTOR */
-    public PlayScreen(CockfightGame game, World world, Chicken chicken1, Chicken chicken2, Screen prevScreen, CockfightGame cockfightGame, BCFS bcfs) {
+    public PlayScreen(CockfightGame game, World world, Chicken chicken1, Chicken chicken2, Screen prevScreen, CockfightGame cockfightGame, BCFS bcfs,boolean firstplay) {
         this.game = game;
 
         // create the camera used to follow mario through the game world
@@ -75,7 +75,7 @@ public class PlayScreen implements Screen {
         this.gamePort = new FitViewport(CockfightGame.worldWidth, CockfightGame.worldHeight, gameCam);
 
         // create the hud and load the map
-        this.hud = new Hud(game.spriteBatch,prevScreen,cockfightGame,bcfs);
+        this.hud = new Hud(game.spriteBatch,prevScreen,cockfightGame,bcfs,firstplay);
         loadMap();
 
         // set the camera to the center of the viewport
@@ -159,7 +159,8 @@ public class PlayScreen implements Screen {
 
     public void handleChicken1Input() {
         if (!chicken1.isAlive())
-            return;
+            bcfs.setScreen(new HistoryScreen(bcfs));
+            game.dispose();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.W))
             chicken1.jump();
@@ -170,8 +171,13 @@ public class PlayScreen implements Screen {
     }
 
     public void handleChicken2Input() {
-        if (!chicken2.isAlive())
+        if (!chicken2.isAlive()){
+
+            bcfs.setScreen(new HistoryScreen(bcfs));
+            dispose();
+            game.dispose();
             return;
+            }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
             chicken2.jump();
@@ -212,9 +218,7 @@ public class PlayScreen implements Screen {
 //            game.setScreen(new HistoryScreen(bcfs));
 //
 //        }
-//        if( !chicken1.isAlive() || !chicken2.isAlive()) {
-//            dispose();
-//        }
+
 
 
         if (getDistance() < 1.6f && chicken1.isAlive() && chicken2.isAlive()) {
@@ -292,6 +296,12 @@ public class PlayScreen implements Screen {
         // follow mario with the camera
         game.spriteBatch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
+
+        if(!chicken1.isAlive()||!chicken2.isAlive()){
+            bcfs.setScreen(new HistoryScreen(bcfs));
+            game.dispose();
+            dispose();
+        }
     }
 
     private void clearScreen() {

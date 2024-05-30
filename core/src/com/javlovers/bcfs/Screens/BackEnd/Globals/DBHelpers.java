@@ -277,7 +277,7 @@ public class DBHelpers {
 
 
 
-    public boolean createMatch(Cock invitorCock, Cock inviteeCock){
+    public boolean createMatch(Cock invitorCock, Cock inviteeCock, int winnerID){
         int Cock1isSaved = getCockID(invitorCock);
         int Cock2isSaved = getCockID(inviteeCock);
         if(Cock1isSaved == -1){
@@ -289,9 +289,10 @@ public class DBHelpers {
             Cock2isSaved = getCockID(inviteeCock);
         }
         try(Connection C = dbConnection.getConnection();){
-            PreparedStatement ps = C.prepareStatement("Insert into tblmatch(invitorCockID,inviteeCockID) values (?,?);");
+            PreparedStatement ps = C.prepareStatement("Insert into tblmatch(invitorCockID,inviteeCockID,winner) values (?,?,?);");
             ps.setInt(1,Cock1isSaved);
             ps.setInt(2,Cock2isSaved);
+            ps.setInt(3,winnerID);
             return ps.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
