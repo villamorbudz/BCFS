@@ -32,6 +32,7 @@ public class HistoryScreen implements Screen {
     OrthographicCamera camera;
     Stage stage;
     Skin skin;
+    Skin customSkin;
     Table table;
     Table sidebarTable;
     Table gameHistoryTable;
@@ -67,6 +68,7 @@ public class HistoryScreen implements Screen {
 
         // Load the skin
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
+        customSkin = new Skin(Gdx.files.internal("custom_ui/custom_ui.json"));
         backgroundTexture = new Texture(Gdx.files.internal("farm.png"));
 
         table = new Table();
@@ -83,7 +85,7 @@ public class HistoryScreen implements Screen {
         enemyLabel = new Label("", skin);
 
         attackLogs = new TextArea("", skin);
-        backButton = new TextButton("BACK", skin);
+        backButton = new TextButton("BACK", customSkin);
         prev = new TextButton("<", skin);
         next = new TextButton(">", skin);
         historyScrollPane = new ScrollPane(gameHistoryTable, skin);
@@ -184,7 +186,7 @@ public class HistoryScreen implements Screen {
         gameInfoContainer.add(gameInfoTable).row();
         table.add(gameInfoContainer).grow().top().row();
         sidebarTable.add(historyScrollPane).width(400).growY().top().left();
-        navigationContainer.add(prev).padRight(25);
+//        navigationContainer.add(prev).padRight(25);
         navigationContainer.add(next).padLeft(25);
         gameInfoContainer.add(navigationContainer).colspan(3).padTop(50).growX().center();
         stage.addActor(table);

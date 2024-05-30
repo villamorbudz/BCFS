@@ -3,6 +3,8 @@ package com.javlovers.bcfs.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+//import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+//import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -45,6 +47,7 @@ public class PlayScreen implements Screen {
     /* BOX 2D ATTRIBUTES */
     private World world;
     private Box2DDebugRenderer box2DRenderer;
+    private BCFS bcfs;
 
 
     /* GAME ATTRIBUTES */
@@ -53,6 +56,7 @@ public class PlayScreen implements Screen {
     private Chicken chicken2;
     private final Random random = new Random();
     private TextButton prevButton;
+    Screen prevScreen;
 
 
     /* CONSTRUCTOR */
@@ -61,6 +65,9 @@ public class PlayScreen implements Screen {
 
         // create the camera used to follow mario through the game world
         this.gameCam = new OrthographicCamera();
+        this.bcfs = bcfs;
+        this.prevScreen=prevScreen;
+
 
         // create a FitViewport to maintain virtual aspect ratio despite screen size
 
@@ -197,7 +204,17 @@ public class PlayScreen implements Screen {
         }
 
         handleChicken2Input();
-        handleChicken1Input();
+
+
+//        if(Hud.btnCicked) {
+//
+//            dispose();
+//            game.setScreen(new HistoryScreen(bcfs));
+//
+//        }
+//        if( !chicken1.isAlive() || !chicken2.isAlive()) {
+//            dispose();
+//        }
 
 
         if (getDistance() < 1.6f && chicken1.isAlive() && chicken2.isAlive()) {

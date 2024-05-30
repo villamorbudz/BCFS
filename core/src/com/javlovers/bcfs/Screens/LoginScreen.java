@@ -132,6 +132,10 @@ public class LoginScreen implements Screen {
                     GlobalEntities.setCurrentUser(res);
                     HashMap<Integer, Cock> Tmp = dbh.getAllCurrCockData();
                     GlobalEntities.CurrentCock = Tmp.get(res.getUserID());
+                    Cock temp = new Cock("",res.getUserID());
+                    temp.setCockID(0);
+                    if(GlobalEntities.CurrentCock==null)GlobalEntities.CurrentCock=temp;
+
                     serverMessage.setColor(Color.GREEN);
                     serverMessage.setText("Logging in...");
                     System.out.println("LOGGING IN");
