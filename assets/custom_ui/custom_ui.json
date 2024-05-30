@@ -43,6 +43,12 @@
 			"g": 1,
 			"b": 1,
 			"a": 1
+		},
+		"black": {
+			"r": 0,
+			"g": 0,
+			"b": 0,
+			"a": 1
 		}
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle": {
@@ -59,6 +65,10 @@
 		"default": {
 			"font": "angrybirds_regular",
 			"fontColor": "RGBA_234_187_39_255"
+		},
+		"tooltip": {
+			"font": "pixeloid_sans",
+			"fontColor": "black"
 		}
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
@@ -82,13 +92,8 @@
 	"com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
 		"default": {
 			"font": "pixeloid_sans",
-			"fontColor": "gray",
+			"fontColor": "black",
 			"background": "field_text_field"
-		}
-	},
-	"com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle": {
-		"default": {
-			"label": "default"
 		}
 	}
 }

@@ -15,5 +15,8 @@ public class Leech implements AttackModule{
         owner.setStat(Cock.StatName.HEALTH, Cock.StatType.BONUS,damage);
     }
 
-
+    @Override
+    public String toString() {
+        return "Leech";
+    }
 }

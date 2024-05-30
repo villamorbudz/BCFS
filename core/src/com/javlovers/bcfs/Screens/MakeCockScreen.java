@@ -86,10 +86,10 @@ public class MakeCockScreen implements Screen {
         cockAttacks = new ButtonGroup<>();
         cockAttacks.setMaxCheckCount(1);
         cockAttacks.setMinCheckCount(0);
-        cockAttacks.add(new TextButton("ATTACK 1", skin, "toggle"));
-        cockAttacks.add(new TextButton("ATTACK 2", skin, "toggle"));
-        cockAttacks.add(new TextButton("ATTACK 3", skin, "toggle"));
-        cockAttacks.add(new TextButton("ATTACK 4", skin, "toggle"));
+        cockAttacks.add(new TextButton("ATTACK 1", skin, "toggle-atk"));
+        cockAttacks.add(new TextButton("ATTACK 2", skin, "toggle-atk"));
+        cockAttacks.add(new TextButton("ATTACK 3", skin, "toggle-atk"));
+        cockAttacks.add(new TextButton("ATTACK 4", skin, "toggle-atk"));
         table.setFillParent(true);
         table.pad(25).left();
 
@@ -243,7 +243,7 @@ public class MakeCockScreen implements Screen {
         HashMap<Integer, Attack> allatk = dbh.getAllAttacksEnabled();
 
         int Maxpage =(int) Math.ceil(allatk.size()/9.0);
-        if(pageNumber > Maxpage) pageNumber = 0;
+        if(pageNumber >= Maxpage) pageNumber = 0;
         if(pageNumber < 0) pageNumber = Maxpage-1;
         ArrayList<Integer> Atkkeys = new ArrayList<>(allatk.keySet());
 
@@ -271,14 +271,31 @@ public class MakeCockScreen implements Screen {
                     int atkID = Atkkeys.get(atkIndex);
                     Attack curratk = allatk.get(atkID);
                     String attackName = curratk.getName();
+                    String attackType = curratk.getAttackModule().toString();
                     System.out.println(attackName);
                     int param1 = curratk.getDamage();
                     double param2 = curratk.getDamageMultiplier();
                     int param3 = curratk.getSpeed();
-                    attackCard = new TextButton(attackName + "\n\n\n" +
-                            "IDamage:   " + atkID + "\n\n" +
+                    attackCard = new TextButton(attackName + "\n" +
+                            attackType + "\n\n" +
+                            "Damage:   " + atkID + "\n\n" +
                             "Multiplier:   " + param2 + "\n\n" +
-                            "Speed:   " + param3 + "\n", skin, "toggle");
+                            "Speed:   " + param3 + "\n", skin, "toggle-atk");
+
+                    switch (curratk.getAttackModule().toString()) {
+                        case "Heal":
+                            attackCard.setColor(Color.GREEN);
+                            attackCard.getLabel().setColor(Color.GREEN);
+                            break;
+                        case "Leech":
+                            attackCard.setColor(Color.PURPLE);
+                            attackCard.getLabel().setColor(Color.PURPLE);
+                            break;
+                        case "Single Attack":
+                            attackCard.setColor(Color.RED);
+                            attackCard.getLabel().setColor(Color.RED);
+                            break;
+                    }
 
                     attackCard.addListener(new ClickListener() {
                         @Override
@@ -353,11 +370,29 @@ public class MakeCockScreen implements Screen {
 
     private void reloadAttackLabel(){
         Cock curr = tempCock;
-        Array<TextButton> atklabels =cockAttacks.getButtons();
+        Array<TextButton> atklabels = cockAttacks.getButtons();
         ArrayList<Attack> atkList = curr.getAttackList();
         for(int x = 0;x<atkList.size();x++){
             Attack currAtk = atkList.get(x);
             atklabels.get(x).setText(currAtk.getName());
+
+            switch (currAtk.getAttackModule().toString()) {
+                case "Heal":
+                    atklabels.get(x).setColor(Color.GREEN);
+                    atklabels.get(x).getLabel().setColor(Color.GREEN);
+                    break;
+                case "Leech":
+                    atklabels.get(x).setColor(Color.PURPLE);
+                    atklabels.get(x).getLabel().setColor(Color.PURPLE);
+                    break;
+                case "Single Attack":
+                    atklabels.get(x).setColor(Color.RED);
+                    atklabels.get(x).getLabel().setColor(Color.RED);
+                    break;
+                default:
+                    atklabels.get(x).setColor(Color.WHITE);
+                    atklabels.get(x).getLabel().setColor(Color.WHITE);
+            }
         }
     }
 

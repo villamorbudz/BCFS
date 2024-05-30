@@ -37,7 +37,6 @@ public class LoginScreen implements Screen {
     TextField usernameField;
     TextField passwordField;
     Texture background;
-    ShapeRenderer renderer;
 
     public LoginScreen(final BCFS gam) {
         game = gam;
@@ -51,9 +50,7 @@ public class LoginScreen implements Screen {
         // Load the skin
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
         customSkin = new Skin(Gdx.files.internal("custom_ui/custom_ui.json"));
-
         background = new Texture(Gdx.files.internal("farm.png"));
-        renderer = new ShapeRenderer();
 
         table = new Table();
         loginContainer = new Table(skin);
@@ -61,15 +58,15 @@ public class LoginScreen implements Screen {
         loginLabel = new Label("LOG IN", customSkin);
         serverMessage = new Label("", skin);
 
-        loginButton = new TextButton("LOG IN", customSkin);
-        signUpRedirectButton = new TextButton("Don't have an account? Create Account", skin, "label");
         usernameField = new TextField("", customSkin);
         usernameField.setMessageText("Username");
-
         passwordField = new TextField("", customSkin);
         passwordField.setMessageText("Password");
         passwordField.setPasswordMode(true);
         passwordField.setPasswordCharacter('*');
+
+        loginButton = new TextButton("LOG IN", customSkin);
+        signUpRedirectButton = new TextButton("Don't have an account? Create Account", skin, "label");
     }
 
     @Override
@@ -89,30 +86,28 @@ public class LoginScreen implements Screen {
         stage.draw();
     }
 
-
-
     @Override
     public void show() {
         table.setFillParent(true);
-        table.pad(50).padTop(150).top();
+        table.pad(50).padTop(25).top().center();
 
         Texture appLogo = new Texture(Gdx.files.internal("logo.png"));
         Image logo = new Image(appLogo);
-        logo.setSize(600, 200);
-        logo.setPosition(101 , 400);
+        logo.setSize(450, 150);
+        logo.setPosition(loginContainer.getWidth() / 2, 425);
         loginContainer.addActor(logo);
-        loginContainer.add(loginLabel).padTop(100).padBottom(35).row();
+        loginContainer.add(loginLabel).padTop(175).padBottom(35).row();
+
+        loginContainer.add(usernameField).width(450).height(60).padBottom(20).row();
+        loginContainer.add(passwordField).width(450).height(60).padBottom(40).row();
+        loginContainer.add(loginButton).width(350).padBottom(25).height(50).row();
+        loginContainer.add(signUpRedirectButton).padBottom(30).row();
+        loginContainer.add(serverMessage);
 
         usernameField.setAlignment(Align.center);
         passwordField.setAlignment(Align.center);
 
-        loginContainer.add(usernameField).width(450).height(60).padBottom(20).row();
-        loginContainer.add(passwordField).width(450).height(60).padBottom(40).row();
-        loginContainer.add(loginButton).width(250).padBottom(30).height(50).row();
-        loginContainer.add(signUpRedirectButton).padBottom(35).row();
-        loginContainer.add(serverMessage);
-
-        table.add(loginContainer).width(800);
+        table.add(loginContainer);
         stage.addActor(table);
 
         signUpRedirectButton.addListener(new ClickListener() {
@@ -144,7 +139,7 @@ public class LoginScreen implements Screen {
                     dispose();
                 }else{
                     serverMessage.setColor(new Color(1f, 0.2f, 0.2f, 1f));
-                    serverMessage.setText("Incorrect Credentials, Please Try Again");
+                    serverMessage.setText("Invalid credentials, please try again");
                 }
                 // Handle Button Click
             }

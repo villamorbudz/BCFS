@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.javlovers.bcfs.BCFS;
@@ -22,16 +23,17 @@ public class SignUpScreen implements Screen {
     Stage stage;
     Skin skin;
     Skin customSkin;
+    Texture background;
+
+    Table table;
+    Table signUpContainer;
     Label signUpLabel;
     Label serverMessage;
-    Table table;
     TextButton signUpButton;
     TextButton loginRedirectButton;
     TextField usernameField;
     TextField displayNameField;
     TextField passwordField;
-    Texture background;
-
 
     public SignUpScreen(final BCFS gam) {
         game = gam;
@@ -46,22 +48,24 @@ public class SignUpScreen implements Screen {
         skin = new Skin(Gdx.files.internal("tracerui/tracer-ui.json"));
         customSkin = new Skin(Gdx.files.internal("custom_ui/custom_ui.json"));
         background = new Texture(Gdx.files.internal("farm.png"));
+
         table = new Table();
+        signUpContainer = new Table();
 
         signUpLabel = new Label("CREATE ACCOUNT", customSkin);
         serverMessage = new Label("", skin);
 
-        signUpButton = new TextButton("CREATE ACCOUNT", customSkin);
-        loginRedirectButton = new TextButton("Already have an account? Log in", skin, "label");
-        usernameField = new TextField("", customSkin);
-        usernameField.setMessageText("Username");
         displayNameField = new TextField("", customSkin);
         displayNameField.setMessageText("Display Name");
-
+        usernameField = new TextField("", customSkin);
+        usernameField.setMessageText("Username");
         passwordField = new TextField("", customSkin);
         passwordField.setMessageText("Password");
         passwordField.setPasswordMode(true);
         passwordField.setPasswordCharacter('*');
+
+        signUpButton = new TextButton("CREATE ACCOUNT", customSkin);
+        loginRedirectButton = new TextButton("Already have an account? Log in", skin, "label");
     }
 
     @Override
@@ -85,20 +89,24 @@ public class SignUpScreen implements Screen {
         table.setFillParent(true);
         table.pad(50).padTop(25).top().center();
 
-        float buttonSpacing = 25f;
         Texture appLogo = new Texture(Gdx.files.internal("logo.png"));
         Image logo = new Image(appLogo);
-        logo.setSize(600, 200);
-        logo.setPosition(341 , 500);
-        table.addActor(logo);
-        table.add(signUpLabel).padTop(300).padBottom(35).row();
-        table.add(displayNameField).width(450).height(60).padBottom(buttonSpacing).row();
-        table.add(usernameField).width(450).height(60).padBottom(buttonSpacing).row();
-        table.add(passwordField).width(450).height(40).padBottom(buttonSpacing).row();
-        table.add(signUpButton).width(400).padTop(25).height(50).row();
-        table.add(loginRedirectButton).padTop(50).row();
-        table.add(serverMessage).padTop(50);
+        logo.setSize(450, 150);
+        logo.setPosition(signUpContainer.getWidth() / 2, 450);
+        signUpContainer.addActor(logo);
+        signUpContainer.add(signUpLabel).padTop(175).padBottom(35).row();
+        signUpContainer.add(displayNameField).width(450).height(60).padBottom(15).row();
+        signUpContainer.add(usernameField).width(450).height(60).padBottom(15).row();
+        signUpContainer.add(passwordField).width(450).height(60).padBottom(35).row();
+        signUpContainer.add(signUpButton).width(350).padBottom(25).height(50).row();
+        signUpContainer.add(loginRedirectButton).padBottom(30).row();
+        signUpContainer.add(serverMessage);
 
+        displayNameField.setAlignment(Align.center);
+        usernameField.setAlignment(Align.center);
+        passwordField.setAlignment(Align.center);
+
+        table.add(signUpContainer);
         stage.addActor(table);
 
         signUpButton.addListener(new ClickListener() {
@@ -109,7 +117,7 @@ public class SignUpScreen implements Screen {
                 String Password = passwordField.getText();
                 if(Objects.equals(DisplayName, "") || Objects.equals(UserName, "") || Objects.equals(Password, "")){
                     serverMessage.setColor(Color.RED);
-                    serverMessage.setText("Please Fill Out ALl Forms");
+                    serverMessage.setText("Please fill out all fields");
                     return;
                 }
                 DBHelpers dbh = new DBHelpers(DBHelpers.getGlobalConnection());
@@ -126,7 +134,6 @@ public class SignUpScreen implements Screen {
         loginRedirectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
                 // Handle Button Click
                 System.out.println("LOGIN");
                 game.setScreen(new LoginScreen(game));
