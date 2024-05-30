@@ -6,6 +6,7 @@ import com.javlovers.bcfs.Screens.BackEnd.DB.AttackHelper;
 import com.javlovers.bcfs.Screens.BackEnd.DB.DBConnection;
 import com.javlovers.bcfs.Screens.BackEnd.Main.*;
 import com.mysql.cj.protocol.SocketMetadata;
+import sun.security.util.Password;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -250,40 +251,22 @@ public class DBHelpers {
     }
 
 
-    public boolean acceptInvite(int inviteID, int inviteeCockID){
-        try(Connection C = dbConnection.getConnection();){
-            PreparedStatement ps = C.prepareStatement("UPDATE tblinvite set isAccepted = 1 where InviteID = ?");
-            ps.setInt(1,inviteID);
-            boolean isSuccess =  ps.execute();
-            if(isSuccess){
-                //createMatch
-                PreparedStatement ps1 = C.prepareStatement("Select invitorCockID from tblinvite where InviteID = ?");
-                ps1.setInt(1,inviteID);
-                ResultSet rs = ps1.executeQuery();
-                int invitorCockID = -1;
-                while(rs.next()){
-                    invitorCockID = rs.getInt("invitorCockID");
-                    break;
-                }
 
-                if(invitorCockID==-1){
-                    System.out.println("An Error occured while getting the invitorCockID");
-                    return false;
-                }else{
-                    createMatch(invitorCockID,inviteeCockID);
-                    return true;
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+    public boolean createMatch(Cock invitorCock, Cock inviteeCock){
+        int Cock1isSaved = getCockID(invitorCock);
+        int Cock2isSaved = getCockID(inviteeCock);
+        if(Cock1isSaved == -1){
+            SendCockData(invitorCock);
+            Cock1isSaved = getCockID(invitorCock);
         }
-        return false;
-    }
-    public boolean createMatch(int invitorCockID, int inviteeCockID){
+        if(Cock2isSaved == -1){
+            SendCockData(inviteeCock);
+            Cock2isSaved = getCockID(inviteeCock);
+        }
         try(Connection C = dbConnection.getConnection();){
             PreparedStatement ps = C.prepareStatement("Insert into tblmatch(invitorCockID,inviteeCockID) values (?,?);");
-            ps.setInt(1,invitorCockID);
-            ps.setInt(2,inviteeCockID);
+            ps.setInt(1,Cock1isSaved);
+            ps.setInt(2,Cock2isSaved);
             return ps.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
