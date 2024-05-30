@@ -117,7 +117,7 @@ public class Attack implements Cloneable{
     }
 
     public String toString(){
-        return String.format("%s\t%s\t%s\t%s", getName(), getDamage(), getSpeed(), getCurrSpeed());
+        return String.format("%s\n\n\n%s\n\n%s\n\n%s\n", getName(), getDamage(), getSpeed(), getCurrSpeed());
     }
 
     public Attack setDamageMultiplier(double damageMultiplier) {

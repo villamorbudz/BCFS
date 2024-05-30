@@ -185,6 +185,7 @@ public class DBHelpers {
         try(Connection c = dbConnection.getConnection();
             PreparedStatement ps = c.prepareStatement("SELECT * FROM tblcock")){
             ResultSet rs = ps.executeQuery();
+            HashMap<Integer,Attack> allAttack = AttackHelper.fetchAllAttack();
             cockData = new HashMap<>();
             while(rs.next()){
                 Cock cock = new Cock(
@@ -193,7 +194,6 @@ public class DBHelpers {
                 );
                 int[] AttackIDs = {rs.getInt("Attack1ID"),rs.getInt("Attack2ID"),rs.getInt("Attack3ID"),rs.getInt("Attack4ID")};
                 cock.setCockID(rs.getInt("UserID"));
-                HashMap<Integer,Attack> allAttack = AttackHelper.fetchAllAttack();
                 for(int AIDs: AttackIDs){
                     if(AIDs == 0) break;
                     Attack tempAtk = AttackHelper.cloneAttack(allAttack.get(AIDs));

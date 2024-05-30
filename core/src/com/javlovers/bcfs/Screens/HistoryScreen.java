@@ -15,8 +15,12 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.javlovers.bcfs.CockfightGame;
 import com.javlovers.bcfs.Others.GlobalEntities;
 import com.javlovers.bcfs.Screens.BackEnd.Globals.DBHelpers;
+import com.javlovers.bcfs.Screens.BackEnd.Main.Attack;
 import com.javlovers.bcfs.Screens.BackEnd.Main.Cock;
+import com.javlovers.bcfs.Screens.BackEnd.Main.MatchResult;
+import com.javlovers.bcfs.Screens.BackEnd.Main.User;
 
+import java.security.AllPermission;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -130,12 +134,21 @@ public class HistoryScreen implements Screen {
         sidebarTable.row();
 
         DBHelpers dbh = new DBHelpers(DBHelpers.getGlobalConnection());
-
+        HashMap<Integer, String> allU = dbh.getAllDIsplayNames();
         HashMap<Integer, ArrayList<Integer>> History = dbh.getMatchesByUser(GlobalEntities.currentUser.getUserID());
-
+        HashMap<Integer, Cock> AllC = dbh.getAllCockData();
         // TODO: implement getter for games from the player
         for(Integer MatchID: History.keySet()){
-            String enemyName = "Match: " + MatchID;
+            ArrayList<Integer> MR = History.get(MatchID);
+            String p1 = allU.get(AllC.get(MR.get(0)).getOwnerID());
+            String p2 = allU.get(AllC.get(MR.get(1)).getOwnerID());
+
+            String enemyName = "";
+            if(p1.equals(GlobalEntities.currentUser.getDisplayName())){
+                enemyName = "Match: " + p2;
+            }else{
+                enemyName = "Match: " + p1;
+            }
             TextButton gameButton = new TextButton("", skin, "toggle");
             Label gameButtonLabel = new Label(enemyName, skin);
             gameButton.setLabel(gameButtonLabel);
@@ -148,12 +161,13 @@ public class HistoryScreen implements Screen {
             gameButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    gameInfoContainer.clear();
                     if (gameButton.isChecked()) {
                         // getGameInfo
-                        getAttackCards(History.get(MatchID));
+                        gameInfoTable.clear();
+                        getAttackCards(MR);
                     } else {
                         // clearInfoTable
+                        gameInfoTable.clear();
                     }
 
                 }
@@ -220,16 +234,31 @@ public class HistoryScreen implements Screen {
         Cock C2 = AllC.get(MatchResult.get(1));
         String p1 = DisplayNames.get(C1.getOwnerID());
         String p2 = DisplayNames.get(C2.getOwnerID());
-        userLabel.setText(String.format("%s (%s)",C1.getName(),p1));
-        enemyLabel.setText(String.format("%s (%s)",C2.getName(),p2));
-
+        String P1 = String.format("%s (%s)",C1.getName(),p1);
+        String P2 = String.format("%s (%s)",C2.getName(),p2);
+        Cock Player;
+        Cock Enemy;
+        if(p1.equals(GlobalEntities.currentUser.getDisplayName())){
+            userLabel.setText(P1);
+            enemyLabel.setText(P2);
+            Player = C1;
+            Enemy = C2;
+        }else{
+            userLabel.setText(P2);
+            enemyLabel.setText(P1);
+            Player = C2;
+            Enemy = C1;
+        }
         gameInfoTable.add(userLabel).growX().padLeft(15).colspan(3).left().row();
         userAttackCards = new Table();
-        for(int i = 0; i < 4; i++) {
-            TextButton attackCard = new TextButton("attackName" + "\n\n\n" +
-                    "IDamage:   " + "atkID" + "\n\n" +
-                    "Multiplier:   " + "param2" + "\n\n" +
-                    "Speed:   " + "param3" + "\n", skin, "display");
+        ArrayList<Attack> atkList = Player.getAttackList();
+        for(int i = 0; i < 4 ; i++) {
+            String AtkDesc = "";
+            if(i < atkList.size()){
+                AtkDesc = atkList.get(i).toString();
+            }
+            Attack atk = atkList.get(i);
+            TextButton attackCard = new TextButton(AtkDesc, skin, "display");
             userAttackCards.add(attackCard).pad(15);
         }
         gameInfoTable.add(userAttackCards).colspan(3).row();
@@ -237,16 +266,19 @@ public class HistoryScreen implements Screen {
 
         gameInfoTable.add(enemyLabel).colspan(3).growX().padLeft(15).right().row();
         enemyAttackCards = new Table();
-        for(int i = 0; i < 4; i++) {
-            TextButton attackCard = new TextButton("attackName" + "\n\n\n" +
-                    "IDamage:   " + "atkID" + "\n\n" +
-                    "Multiplier:   " + "param2" + "\n\n" +
-                    "Speed:   " + "param3" + "\n", skin, "display");
+        atkList = Enemy.getAttackList();
+        for(int i = 0; i < 4 ; i++) {
+            String AtkDesc = "";
+            if(i < atkList.size()){
+                AtkDesc = atkList.get(i).toString();
+            }
+            Attack atk = atkList.get(i);
+            TextButton attackCard = new TextButton(AtkDesc, skin, "display");
             enemyAttackCards.add(attackCard).pad(15);
         }
         gameInfoTable.add(enemyAttackCards).colspan(3).padBottom(25).row();
 
-        Label param1 = new Label("Param1: " + "9999", skin);
+        Label param1 = new Label("Winner: " + AllC.get(MatchResult.get(2)).getName(), skin);
         Label param2 = new Label("Param2: " + "9999", skin);
         Label param3 = new Label("Param3: " + "9999", skin);
 
