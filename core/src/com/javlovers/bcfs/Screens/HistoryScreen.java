@@ -87,7 +87,9 @@ public class HistoryScreen implements Screen {
         attackLogs = new TextArea("", skin);
         backButton = new TextButton("BACK", customSkin);
         prev = new TextButton("<", skin);
-        next = new TextButton(">", skin);
+
+
+        next = new TextButton("REPLAY", customSkin);
         historyScrollPane = new ScrollPane(gameHistoryTable, skin);
 
         gamesButtonGroup = new ButtonGroup<>();
@@ -187,7 +189,7 @@ public class HistoryScreen implements Screen {
         table.add(gameInfoContainer).grow().top().row();
         sidebarTable.add(historyScrollPane).width(400).growY().top().left();
 //        navigationContainer.add(prev).padRight(25);
-        navigationContainer.add(next).padLeft(25);
+        navigationContainer.add(next).width(200).height(45).padLeft(25);
         gameInfoContainer.add(navigationContainer).colspan(3).padTop(50).growX().center();
         stage.addActor(table);
         stage.addActor(table);
