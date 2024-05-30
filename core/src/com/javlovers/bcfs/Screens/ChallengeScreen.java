@@ -13,6 +13,7 @@ import com.javlovers.bcfs.BCFS;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.javlovers.bcfs.CockfightGame;
 import com.javlovers.bcfs.Others.GlobalEntities;
 import com.javlovers.bcfs.Screens.BackEnd.Globals.DBHelpers;
 import com.javlovers.bcfs.Screens.BackEnd.Globals.Helpers;
@@ -195,6 +196,7 @@ public class ChallengeScreen implements Screen {
 
                             dbh.createMatch(GlobalEntities.CurrentCock, allTempC.get(UserID));
                             //dbh.setWinner(matchID,winner);
+                            playMatch();
                         }
                     }
                 });
@@ -203,6 +205,16 @@ public class ChallengeScreen implements Screen {
             }
         }
     }
+
+    private void playMatch() {
+        CockfightGame cockfightGame = new CockfightGame();
+
+//        gameInfoTable.add(attacksSequenceTable).center();
+        cockfightGame.startGame(this,cockfightGame,game);
+        game.setScreen(cockfightGame.getScreen());
+    }
+
+
 
     @Override
     public void resize(int width, int height) {

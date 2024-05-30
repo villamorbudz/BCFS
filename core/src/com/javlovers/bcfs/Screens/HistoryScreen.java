@@ -184,9 +184,10 @@ public class HistoryScreen implements Screen {
         gameInfoContainer.add(gameInfoTable).row();
         table.add(gameInfoContainer).grow().top().row();
         sidebarTable.add(historyScrollPane).width(400).growY().top().left();
-//        navigationContainer.add(prev).padRight(25);
-//        navigationContainer.add(next).padLeft(25);
-//        gameInfoContainer.add(navigationContainer).colspan(3).padTop(50).growX().center();
+        navigationContainer.add(prev).padRight(25);
+        navigationContainer.add(next).padLeft(25);
+        gameInfoContainer.add(navigationContainer).colspan(3).padTop(50).growX().center();
+        stage.addActor(table);
         stage.addActor(table);
 
         backButton.addListener(new ClickListener() {
@@ -211,8 +212,10 @@ public class HistoryScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Handle Button Click
-                navigate(2);
+//                navigate(2);
+                showFightReplay();
             }
+
         });
     }
 
@@ -302,7 +305,7 @@ public class HistoryScreen implements Screen {
     private void showFightReplay() {
         // Logic to display the CockfightGame within the history screen
         // This might involve setting the screen to the PlayScreen or rendering the game within a specific area
-        cockfightGame.startGame();
+        cockfightGame.startGame(this,cockfightGame,game);
         game.setScreen(cockfightGame.getScreen());
     }
 

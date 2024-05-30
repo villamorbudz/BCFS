@@ -1,6 +1,7 @@
 package com.javlovers.bcfs;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -24,7 +25,7 @@ public class CockfightGame extends Game {
 		// startGame();
 	}
 
-	public void startGame() {
+	public void startGame(Screen prevScreen, CockfightGame cockFight, BCFS bcfs) {
 		spriteBatch = new SpriteBatch();
 		World world = new World(new Vector2(0, WORLD_GRAVITY), true);
 
@@ -45,8 +46,13 @@ public class CockfightGame extends Game {
 				.setIsFaceRight(false)
 				.build();
 
-		PlayScreen playScreen = new PlayScreen(this, world, chicken1, chicken2);
+		PlayScreen playScreen = new PlayScreen(this, world, chicken1, chicken2,prevScreen,cockFight,bcfs);
 		setScreen(playScreen);
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
 	}
 
 	@Override

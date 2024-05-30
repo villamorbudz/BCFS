@@ -10,10 +10,12 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.javlovers.bcfs.BCFS;
 import com.javlovers.bcfs.CockfightGame;
-// import com.javlovers.bcfs.Scenes.Hud;
+ import com.javlovers.bcfs.Scenes.Hud;
 import com.javlovers.bcfs.Sprites.Chicken;
 import com.javlovers.bcfs.Tools.B2WorldCreator;
 
@@ -31,7 +33,7 @@ public class PlayScreen implements Screen {
     /* CAMERA ATTRIBUTES */
     private final OrthographicCamera gameCam;
     private final Viewport gamePort;
-    //private final Hud hud;
+    private final Hud hud;
 
 
     /* TILED MAP ATTRIBUTES */
@@ -50,10 +52,11 @@ public class PlayScreen implements Screen {
     private Chicken chicken1;
     private Chicken chicken2;
     private final Random random = new Random();
+    private TextButton prevButton;
 
 
     /* CONSTRUCTOR */
-    public PlayScreen(CockfightGame game, World world, Chicken chicken1, Chicken chicken2) {
+    public PlayScreen(CockfightGame game, World world, Chicken chicken1, Chicken chicken2, Screen prevScreen, CockfightGame cockfightGame, BCFS bcfs) {
         this.game = game;
 
         // create the camera used to follow mario through the game world
@@ -65,7 +68,7 @@ public class PlayScreen implements Screen {
         this.gamePort = new FitViewport(CockfightGame.worldWidth, CockfightGame.worldHeight, gameCam);
 
         // create the hud and load the map
-        //this.hud = new Hud(game.spriteBatch);
+        this.hud = new Hud(game.spriteBatch,prevScreen,cockfightGame,bcfs);
         loadMap();
 
         // set the camera to the center of the viewport
@@ -142,7 +145,10 @@ public class PlayScreen implements Screen {
 
 
     @Override
-    public void show() {}
+    public void show() {
+
+
+    }
 
     public void handleChicken1Input() {
         if (!chicken1.isAlive())
@@ -267,8 +273,8 @@ public class PlayScreen implements Screen {
         game.spriteBatch.end();
 
         // follow mario with the camera
-        /* game.spriteBatch.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.stage.draw(); */
+        game.spriteBatch.setProjectionMatrix(hud.stage.getCamera().combined);
+        hud.stage.draw();
     }
 
     private void clearScreen() {
@@ -293,10 +299,13 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
+//        this.dispose();
         map.dispose();
         renderer.dispose();
         world.dispose();
         box2DRenderer.dispose();
-        //hud.dispose();
+        hud.dispose();
+//        game.setScreen(new Landi);
+
     }
 }
