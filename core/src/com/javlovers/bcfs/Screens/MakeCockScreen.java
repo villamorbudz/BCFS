@@ -237,7 +237,7 @@ public class MakeCockScreen implements Screen {
 
         DBHelpers.setGlobalConnection(new LocalHostConnection());
         DBHelpers dbh = new DBHelpers(new LocalHostConnection());
-        HashMap<Integer, Attack> allatk = dbh.getAllAttacks();
+        HashMap<Integer, Attack> allatk = dbh.getAllAttacksEnabled();
 
         int Maxpage =(int) Math.ceil(allatk.size()/9.0);
         if(pageNumber > Maxpage) pageNumber = 0;

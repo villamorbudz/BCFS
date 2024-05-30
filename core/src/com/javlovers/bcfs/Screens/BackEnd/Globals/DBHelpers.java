@@ -32,6 +32,31 @@ public class DBHelpers {
         System.out.println("GC set");
         globalConnection = dbc;
     }
+    public HashMap<Integer, Attack> getAllAttacksEnabled() {
+        HashMap<Integer, Attack> allAttacks = new HashMap<>();
+        try (Connection C = dbConnection.getConnection();
+             Statement statement = C.createStatement()) {
+            String query = "SELECT * FROM tblattack WHERE isDisabled = 0";
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                String aName = rs.getString("name");
+                int aSpeed = rs.getInt("speed");
+                int aDamage = rs.getInt("damage");
+                double adamageMult = rs.getDouble("damageMultiplier");
+                int attackModule = rs.getInt("attackModule");
+                int Id = rs.getInt("attackID");
+                AttackModule AM = AttackModuleBuilder.buildAttackModule(attackModule);
+                Attack atk = new Attack(aName, aSpeed, aDamage, adamageMult, AM,Id);
+                atk.setAttackID(rs.getInt("attackID"));
+                atk.setIsDisabled(rs.getBoolean("isDisabled"));
+                allAttacks.put(Id, atk);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allAttacks;
+    }
 
     public HashMap<Integer, Attack> getAllAttacks() {
         HashMap<Integer, Attack> allAttacks = new HashMap<>();
