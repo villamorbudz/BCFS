@@ -23,7 +23,7 @@ public class LandingScreen implements Screen {
     ArrayList<TextButton> buttons;
     Skin skin;
     Skin customSkin;
-    Texture backgroundTexture;  // Add this line
+    Texture backgroundTexture;
 
     public LandingScreen(final BCFS gam) {
         game = gam;

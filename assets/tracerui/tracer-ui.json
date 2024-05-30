@@ -413,7 +413,7 @@
 			"fontColor": "color",
 			"downFontColor": "white",
 			"overFontColor": "white",
-			"checkedFontColor": "white",
+			"checkedFontColor": "black",
 			"up": "button-c",
 			"down": "button-pressed-c",
 			"checked": "button-over-c"
