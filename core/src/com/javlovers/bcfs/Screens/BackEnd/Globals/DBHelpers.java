@@ -4,10 +4,8 @@ import com.javlovers.bcfs.Screens.BackEnd.Attacks.AttackModule;
 import com.javlovers.bcfs.Screens.BackEnd.Builders.AttackModuleBuilder;
 import com.javlovers.bcfs.Screens.BackEnd.DB.AttackHelper;
 import com.javlovers.bcfs.Screens.BackEnd.DB.DBConnection;
-import com.javlovers.bcfs.Screens.BackEnd.Main.Attack;
-import com.javlovers.bcfs.Screens.BackEnd.Main.Cock;
-import com.javlovers.bcfs.Screens.BackEnd.Main.MatchFacade;
-import com.javlovers.bcfs.Screens.BackEnd.Main.User;
+import com.javlovers.bcfs.Screens.BackEnd.Main.*;
+import com.mysql.cj.protocol.SocketMetadata;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -159,7 +157,7 @@ public class DBHelpers {
 
     public int getCockID(Cock cock){
             ArrayList<Attack> lists = cock.getAttackList();
-            int res = 0;
+            int res = -1;
             try(Connection C = dbConnection.getConnection();
             PreparedStatement ps = C.prepareStatement("SELECT CockID FROM tblcock WHERE UserID = ? AND CockName = ? AND Attack1ID = ? AND Attack2ID = ? AND Attack3ID = ? AND Attack4ID = ?")) {
                 ps.setInt(1,cock.getOwnerID());
@@ -172,10 +170,10 @@ public class DBHelpers {
                     ps.setInt(startInd++,0);
                 }
                 ResultSet rs = ps.executeQuery();
+
                 while(rs.next()){
-                    cock.setCockID(rs.getInt("CockID"));
+                    res = rs.getInt("CockID");
                 }
-                res = cock.getCockID();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -191,17 +189,17 @@ public class DBHelpers {
             while(rs.next()){
                 Cock cock = new Cock(
                         rs.getString("CockName"),
-                        rs.getInt("OwnerID")
+                        rs.getInt("UserID")
                 );
                 int[] AttackIDs = {rs.getInt("Attack1ID"),rs.getInt("Attack2ID"),rs.getInt("Attack3ID"),rs.getInt("Attack4ID")};
-                cock.setCockID(rs.getInt("CurrID"));
+                cock.setCockID(rs.getInt("UserID"));
                 HashMap<Integer,Attack> allAttack = AttackHelper.fetchAllAttack();
                 for(int AIDs: AttackIDs){
                     if(AIDs == 0) break;
                     Attack tempAtk = AttackHelper.cloneAttack(allAttack.get(AIDs));
                     cock.addAttack(tempAtk);
                 }
-                cockData.put(rs.getInt("CurrID"),cock);
+                cockData.put(rs.getInt("UserID"),cock);
             }
             System.out.println("Cocks Fetched Successfully");
         } catch (SQLException e) {
@@ -282,16 +280,42 @@ public class DBHelpers {
         return false;
     }
     public boolean createMatch(int invitorCockID, int inviteeCockID){
-
         try(Connection C = dbConnection.getConnection();){
-            PreparedStatement ps = C.prepareStatement("Insert into tblmatch(invitorCockID,inviteeCockID) values (?,?)");
+            PreparedStatement ps = C.prepareStatement("Insert into tblmatch(invitorCockID,inviteeCockID) values (?,?);");
             ps.setInt(1,invitorCockID);
             ps.setInt(2,inviteeCockID);
-            return  ps.execute();
+            return ps.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+    public int insertWhenNotExistCock(Cock cock){
+        return -1;
+    }
+    public HashMap<Integer, ArrayList<Integer>> getMatchesByUser(int UserID){
+        try(Connection C = dbConnection.getConnection();
+            PreparedStatement ps = C.prepareStatement("SELECT matchID,invitorCockID,inviteeCockID,winner FROM tblmatch JOIN tblcock AS invitor ON tblmatch.invitorCockID = invitor.CockID JOIN tblcock AS invitee ON tblmatch.inviteeCockID = invitee.CockID WHERE invitor.UserID = ? OR invitee.UserID = ? ORDER BY matchID;")){
+            HashMap<Integer,ArrayList<Integer>> Matches = new HashMap<>();
+            ps.setInt(1,UserID);
+            ps.setInt(2,UserID);
+            ResultSet res = ps.executeQuery();
+            while(res.next()){
+                int MatchID = res.getInt("matchID");
+                int me = res.getInt("invitorCockID");
+                int them = res.getInt("inviteeCockID");
+                int winner = res.getInt("winner");
+                ArrayList<Integer> something = new ArrayList<Integer>();
+                something.add(me);
+                something.add(them);
+                something.add(winner);
+                Matches.put(MatchID,something);
+            }
+            return Matches;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public boolean setWinner(int matchID, int WinnerID){
         Boolean res;
@@ -399,7 +423,6 @@ public class DBHelpers {
 
 
     public String getDisplayName(int userid){
-
         try(Connection C = dbConnection.getConnection();){
             PreparedStatement ps = C.prepareStatement("Select DisplayName from tbluser where UserID = ?");
             ps.setInt(1,userid);
@@ -407,12 +430,10 @@ public class DBHelpers {
             while (rs.next()){
                 return rs.getString("DisplayName");
             }
-
         }
         catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
         return null;
     }
     public int getInvitorCockID(int inviteID){

@@ -181,15 +181,20 @@ public class ChallengeScreen implements Screen {
         HashMap<Integer,String> allPlayer = dbh.getAllDIsplayNames();
         HashMap<Integer,Cock> allTempC = dbh.getAllCurrCockData();
         Set<Integer> ks = allTempC.keySet();
+        Cock C = GlobalEntities.CurrentCock;
         for(Integer UserID: allPlayer.keySet()) {
-            if(ks.contains(UserID)){
+            if(ks.contains(UserID) && C.getOwnerID() != UserID){
                 sampleRequestChallenge = new TextButton(allPlayer.get(UserID), customSkin);
                 sampleRequestChallenge.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         // Handle Button Click
                         if(GlobalEntities.CurrentCock != null){
+
                             int winner = Helpers.Fight(GlobalEntities.CurrentCock,allTempC.get(UserID));
+
+                            dbh.createMatch(GlobalEntities.CurrentCock.getCockID(), allTempC.get(UserID).getCockID());
+                            //dbh.setWinner(matchID,winner);
                         }
                     }
                 });
