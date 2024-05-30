@@ -288,11 +288,11 @@ public class HistoryScreen implements Screen {
         }
         gameInfoTable.add(enemyAttackCards).colspan(3).padBottom(25).row();
         int WinnerID = MatchResult.get(2);
-        Label param1 = new Label("Winner: " + ((WinnerID != 0) ? AllC.get(WinnerID).getName() : "None"), skin);
+        //Label param1 = new Label("Winner: " + ((WinnerID != 0) ? AllC.get(WinnerID).getName() : "None"), skin);
         //Label param2 = new Label("Param2: " + "9999", skin);
         //Label param3 = new Label("Param3: " + "9999", skin);
 
-        gameInfoTable.add(param1);
+        //gameInfoTable.add(param1);
         //gameInfoTable.add(param2);
         //gameInfoTable.add(param3);
     }

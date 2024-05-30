@@ -195,6 +195,7 @@ public class ChallengeScreen implements Screen {
                             int winner = Helpers.Fight(GlobalEntities.CurrentCock,allTempC.get(UserID));
 
                             dbh.createMatch(GlobalEntities.CurrentCock, allTempC.get(UserID));
+
                             //dbh.setWinner(matchID,winner);
                             playMatch();
                         }
