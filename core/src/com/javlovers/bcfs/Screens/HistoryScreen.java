@@ -19,7 +19,10 @@ import com.javlovers.bcfs.Screens.BackEnd.Main.Attack;
 import com.javlovers.bcfs.Screens.BackEnd.Main.Cock;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 import static com.badlogic.gdx.utils.Align.center;
 
@@ -142,10 +145,15 @@ public class HistoryScreen implements Screen {
         HashMap<Integer, ArrayList<Integer>> History = dbh.getMatchesByUser(GlobalEntities.currentUser.getUserID());
         HashMap<Integer, Cock> AllC = dbh.getAllCockData();
         // TODO: implement getter for games from the player
-        for(Integer MatchID: History.keySet()){
+        Set<Integer> temp = History.keySet();
+        List<Integer> list = new ArrayList<>(temp);
+        Collections.reverse(list);
+
+        for(Integer MatchID: list){
             ArrayList<Integer> MR = History.get(MatchID);
             String p1 = allU.get(AllC.get(MR.get(0)).getOwnerID());
             String p2 = allU.get(AllC.get(MR.get(1)).getOwnerID());
+            int winner = MR.get(0).equals(MR.get(2))?1:0;
 
             String enemyName = "";
             if(p1.equals(GlobalEntities.currentUser.getDisplayName())){
@@ -153,10 +161,25 @@ public class HistoryScreen implements Screen {
             }else{
                 enemyName = "Match: " + p1;
             }
-            TextButton gameButton = new TextButton("", skin, "toggle");
+            TextButton gameButton = new TextButton("", skin, "toggle-atk");
             Label gameButtonLabel = new Label(enemyName, skin);
             gameButton.setLabel(gameButtonLabel);
             gameButtonLabel.setAlignment(center);
+
+            switch (winner) {
+                case 0:
+                    gameButton.setColor(Color.RED);
+                    gameButton.getLabel().setColor(Color.RED);
+                    break;
+                case 1:
+                    gameButton.setColor(Color.GREEN);
+                    gameButton.getLabel().setColor(Color.GREEN);
+                    break;
+                default:
+                    gameButton.setColor(Color.WHITE);
+                    gameButton.getLabel().setColor(Color.WHITE);
+                    break;
+            }
 
             gamesButtonGroup.add(gameButton);
             gameHistoryTable.add(gameButton).width(350).height(60).padBottom(buttonSpacing).center();
@@ -179,9 +202,6 @@ public class HistoryScreen implements Screen {
                 }
             });
         }
-
-
-
 
         gameInfoContainer.add(gameInfoTable).row();
         table.add(gameInfoContainer).grow().top().row();
@@ -257,6 +277,7 @@ public class HistoryScreen implements Screen {
             Player = C2;
             Enemy = C1;
         }
+        userLabel.setColor(Color.WHITE);
         gameInfoTable.add(userLabel).growX().padLeft(15).colspan(3).left().row();
         userAttackCards = new Table();
         ArrayList<Attack> atkList = Player.getAttackList();
@@ -266,12 +287,28 @@ public class HistoryScreen implements Screen {
                 AtkDesc = atkList.get(i).toString();
             }
             Attack atk = atkList.get(i);
-            TextButton attackCard = new TextButton(AtkDesc, skin, "display");
-            userAttackCards.add(attackCard).pad(15);
+            TextButton attackCard = new TextButton(AtkDesc, skin, "display-atk");
+            userAttackCards.add(attackCard).width(150).height(200).pad(15);
+
+            switch (atk.getAttackModule().toString()) {
+                case "Heal":
+                    attackCard.setColor(Color.GREEN);
+                    attackCard.getLabel().setColor(Color.GREEN);
+                    break;
+                case "Leech":
+                    attackCard.setColor(Color.PURPLE);
+                    attackCard.getLabel().setColor(Color.PURPLE);
+                    break;
+                case "Single Attack":
+                    attackCard.setColor(Color.RED);
+                    attackCard.getLabel().setColor(Color.RED);
+                    break;
+            }
         }
         gameInfoTable.add(userAttackCards).colspan(3).row();
         userAttackCards.padBottom(50);
 
+        enemyLabel.setColor(Color.WHITE);
         gameInfoTable.add(enemyLabel).colspan(3).growX().padLeft(15).right().row();
         enemyAttackCards = new Table();
         atkList = Enemy.getAttackList();
@@ -281,8 +318,23 @@ public class HistoryScreen implements Screen {
                 AtkDesc = atkList.get(i).toString();
             }
             Attack atk = atkList.get(i);
-            TextButton attackCard = new TextButton(AtkDesc, skin, "display");
-            enemyAttackCards.add(attackCard).pad(15);
+            TextButton attackCard = new TextButton(AtkDesc, skin, "display-atk");
+            enemyAttackCards.add(attackCard).pad(15).width(150).height(200);
+
+            switch (atk.getAttackModule().toString()) {
+                case "Heal":
+                    attackCard.setColor(Color.GREEN);
+                    attackCard.getLabel().setColor(Color.GREEN);
+                    break;
+                case "Leech":
+                    attackCard.setColor(Color.PURPLE);
+                    attackCard.getLabel().setColor(Color.PURPLE);
+                    break;
+                case "Single Attack":
+                    attackCard.setColor(Color.RED);
+                    attackCard.getLabel().setColor(Color.RED);
+                    break;
+            }
         }
         gameInfoTable.add(enemyAttackCards).colspan(3).padBottom(25).row();
         int WinnerID = MatchResult.get(2);

@@ -433,6 +433,11 @@
 			"fontColor": "color",
 			"up": "button-c"
 		},
+		"display-atk": {
+			"font": "font",
+			"fontColor": "color",
+			"up": "button-pressed-c"
+		},
 		"label": {
 			"font": "font",
 			"fontColor": "color"
